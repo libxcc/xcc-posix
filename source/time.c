@@ -1,4 +1,5 @@
 ﻿#include <xcc-posix/time.h>
+#include <xcc-posix/memory.h>
 #if !defined(XCC_SYSTEM_ANDROID)
 #include <sys/timeb.h>
 #endif
@@ -6,6 +7,23 @@
 #include <sys/time.h>
 #include <time.h>
 #endif
+
+
+
+// 高精度计时结构
+typedef struct XCC_TIME_HPT_CONTEXT
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	LARGE_INTEGER		time_begin;			// 开始时间
+	LARGE_INTEGER		time_end;			// 结束时间
+	LARGE_INTEGER		time_cpu;			// CPU时间
+#else
+	struct timeval		time_begin;			// 开始时间
+	struct timeval		time_end;			// 结束时间
+#endif
+}XCC_TIME_HPT_CONTEXT;
+
+
 
 
 
@@ -124,4 +142,68 @@ _XPOSIXAPI_ x_time_type __xcall__ x_time_system_microsecond()
 	vMicrosecond += (vTimeSpec.tv_nsec / 1000);
 #endif
 	return vMicrosecond;
+}
+
+
+
+
+
+// 高精度计时器: 创建
+_XPOSIXAPI_ HANDLE __xcall__ x_time_hpt_new()
+{
+	XCC_TIME_HPT_CONTEXT*	vContext = (XCC_TIME_HPT_CONTEXT*)x_posix_malloc(sizeof(XCC_TIME_HPT_CONTEXT));
+	if (vContext)
+	{
+		x_time_hpt_reset(vContext);
+	}
+	return vContext;
+}
+
+// 高精度计时器: 重置
+_XPOSIXAPI_ void __xcall__ x_time_hpt_reset(HANDLE _Handle)
+{
+	XCC_TIME_HPT_CONTEXT*		vContext = (XCC_TIME_HPT_CONTEXT*)_Handle;
+	if (vContext)
+	{
+		x_posix_memset(vContext, 0, sizeof(XCC_TIME_HPT_CONTEXT));
+#if defined(XCC_SYSTEM_WINDOWS)
+		QueryPerformanceFrequency(&(vContext->time_cpu));
+		QueryPerformanceCounter(&(vContext->time_begin));
+#else
+		gettimeofday(&(vContext->time_begin), NULL);
+#endif
+	}
+}
+
+// 高精度计时器: 计算
+_XPOSIXAPI_ x_time_type __xcall__ x_time_hpt_calc(HANDLE _Handle)
+{
+	x_time_type			vDifference = 0;
+	XCC_TIME_HPT_CONTEXT*		vContext = (XCC_TIME_HPT_CONTEXT*)_Handle;
+	if (vContext)
+	{
+#if defined(XCC_SYSTEM_WINDOWS)
+		QueryPerformanceCounter(&(vContext->time_end));
+
+		x_time_type		dbCpuTime = vContext->time_cpu.QuadPart;
+		x_time_type		nTemp = vContext->time_end.QuadPart - vContext->time_begin.QuadPart;
+		vDifference = nTemp * 1000 / dbCpuTime;
+#else
+		gettimeofday(&(vContext->time_end), NULL);
+		x_time_type		vTvSec = vContext->time_end.tv_sec - vContext->time_begin.tv_sec;
+		x_time_type		vTvUsec = vContext->time_end.tv_usec - vContext->time_begin.tv_usec;
+		vDifference += vTvSec * 1000000 + vTvUsec;
+#endif
+	}
+
+	// 返回微秒值
+	return vDifference;
+}
+
+// 高精度计时器: 释放
+_XPOSIXAPI_ x_time_type __xcall__ x_time_hpt_free(HANDLE _Handle)
+{
+	x_time_type			vDifference = x_time_hpt_calc(_Handle);
+	x_posix_free((XCC_TIME_HPT_CONTEXT*)_Handle);
+	return vDifference;
 }

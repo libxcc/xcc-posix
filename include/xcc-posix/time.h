@@ -40,6 +40,22 @@ _XPOSIXAPI_ x_time_type __xcall__ x_time_system_microsecond();
 
 
 
+
+
+// 高精度计时器: 创建
+_XPOSIXAPI_ HANDLE __xcall__ x_time_hpt_new();
+
+// 高精度计时器: 重置
+_XPOSIXAPI_ void __xcall__ x_time_hpt_reset(HANDLE _Handle);
+
+// 高精度计时器: 计算
+_XPOSIXAPI_ x_time_type __xcall__ x_time_hpt_calc(HANDLE _Handle);
+
+// 高精度计时器: 释放
+_XPOSIXAPI_ x_time_type __xcall__ x_time_hpt_free(HANDLE _Handle);
+
+
+
 XCC_CXX_EXTERN_END
 
 #endif
