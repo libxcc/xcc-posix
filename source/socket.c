@@ -549,6 +549,13 @@ _XPOSIXAPI_ int __xcall__ x_socket_transfer(x_socket_t _Socket1, x_socket_t _Soc
 		}
 		else
 		{
+			// socket exception
+			if (FD_ISSET(_Socket1, &vExceptFds) || FD_ISSET(_Socket2, &vExceptFds))
+			{
+				vError = x_posix_errno();
+				break;
+			}
+
 			// There are sockets to read
 			if (FD_ISSET(_Socket1, &vReadFds))
 			{

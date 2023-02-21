@@ -102,6 +102,13 @@ typedef 		void*			HWND;
 
 
 
+// X-Series type definition : HKEY
+#if !defined(XCC_SYSTEM_WINDOWS)
+typedef 		void*			HKEY;
+#endif
+
+
+
 // X-Series type definition : PVOID
 #if !defined(XCC_SYSTEM_WINDOWS)
 typedef			void*			PVOID;
