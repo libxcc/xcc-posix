@@ -14,8 +14,9 @@
 
 // Global variable
 static x_log_level_t		_global_log_level = XLOG_LEVEL_VERBOSE;
-static XCC_log_printf_cb_t	_global_log_printf = NULL;
+static xcc_log_printf_cb_t	_global_log_printf = NULL;
 static FILE*			_global_log_stream = NULL;
+static bool			_global_log_fflush = false;
 
 
 
@@ -96,7 +97,7 @@ static int __xcall__ x_log_printf_to_stream(FILE* _Stream, x_log_level_t _Level,
 	wchar_t*	vMessageW = x_posix_strutow(_Message);
 #endif
 
-	if(vTimePrefix && vProcessPrefix && vApplicationPrefix && vLevelPrefix)
+	if(vTimePrefix && vProcessPrefix && vApplicationPrefix)
 	{
 #if defined(XCC_SYSTEM_WINDOWS)
 		if(vMessageW)
@@ -117,6 +118,10 @@ static int __xcall__ x_log_printf_to_stream(FILE* _Stream, x_log_level_t _Level,
 #if defined(XCC_SYSTEM_WINDOWS)
 	x_posix_free(vMessageW);
 #endif
+	if(_global_log_fflush)
+	{
+		x_posix_fflush(_Stream);
+	}
 	return vSync;
 }
 
@@ -156,8 +161,14 @@ _XPOSIXAPI_ x_log_level_t __xcall__ x_log_get_level()
 	return _global_log_level;
 }
 
+// 设置强制刷新流
+_XPOSIXAPI_ void __xcall__ x_log_set_fflush(bool _Status)
+{
+	_global_log_fflush = _Status;
+}
+
 /// 设置日志回调
-_XPOSIXAPI_ void __xcall__ x_log_set_printf_cb(XCC_log_printf_cb_t _Function)
+_XPOSIXAPI_ void __xcall__ x_log_set_printf_cb(xcc_log_printf_cb_t _Function)
 {
 	_global_log_printf = _Function;
 }

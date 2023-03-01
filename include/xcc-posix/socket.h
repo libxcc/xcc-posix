@@ -136,7 +136,21 @@ _XPOSIXAPI_ char* __xcall__ x_socket_address_to_string(const struct sockaddr* _A
 
 
 
-// Transfer data between two sockets
+// posix : 接收所有数据
+_XPOSIXAPI_ int __xcall__ x_socket_recv_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags);
+
+// posix : 接收所有数据
+_XPOSIXAPI_ int __xcall__ x_socket_recvfrom_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags, struct sockaddr* _From, socklen_t* _FromLen);
+
+// posix : 发送所有数据
+_XPOSIXAPI_ bool __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags);
+
+// posix : 发送所有数据
+_XPOSIXAPI_ bool __xcall__ x_socket_sendto_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen);
+
+
+
+// 在两个套接字之间传输数据
 _XPOSIXAPI_ int __xcall__ x_socket_transfer(x_socket_t _Socket1, x_socket_t _Socket2);
 
 

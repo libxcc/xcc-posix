@@ -18,7 +18,7 @@ typedef enum
 }x_log_level_t;
 
 // 日志回调声明
-typedef int(*XCC_log_printf_cb_t)(x_log_level_t _Level, const char* _TAG, const char* _Message);
+typedef int(__xcall__ *xcc_log_printf_cb_t)(x_log_level_t _Level, const char* _TAG, const char* _Message);
 
 
 
@@ -30,14 +30,17 @@ _XPOSIXAPI_ void __xcall__ x_log_set_level(x_log_level_t _Level);
 /// \return 当前日志级别
 _XPOSIXAPI_ x_log_level_t __xcall__ x_log_get_level();
 
+// 设置强制刷新流
+_XPOSIXAPI_ void __xcall__ x_log_set_fflush(bool _Status);
+
 /// 设置日志回调
 /// 当输出日志时，调用回调函数输出。
-/// \param _Function 如果参数为空，则使用默认输出
-_XPOSIXAPI_ void __xcall__ x_log_set_printf_cb(XCC_log_printf_cb_t _Function);
+/// \param _Function : 如果参数为空，则使用默认输出
+_XPOSIXAPI_ void __xcall__ x_log_set_printf_cb(xcc_log_printf_cb_t _Function);
 
 /// 设置日志输出流
 /// 当输出日志时，输出在指定的流中。
-/// \param _Stream 如果参数为空，则默认使用stdout
+/// \param _Stream : 如果参数为空，则默认使用stdout
 _XPOSIXAPI_ void __xcall__ x_log_set_printf_stream(FILE* _Stream);
 
 /// 以可变参数模式格式化日志输出

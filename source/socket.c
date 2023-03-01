@@ -508,7 +508,77 @@ _XPOSIXAPI_ char* __xcall__ x_socket_address_to_string(const struct sockaddr* _A
 
 
 
-// Transfer data between two sockets
+// posix : 接收所有数据
+_XPOSIXAPI_ int __xcall__ x_socket_recv_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags)
+{
+	char*		vBytes = (char*)_Buffer;
+	int		vSent = 0;
+	while (vSent < _Length)
+	{
+		int		vSendBytes = x_socket_recv(_Socket, vBytes + vSent, _Length - vSent, _Flags);
+		if (vSendBytes <= 0)
+		{
+			break;
+		}
+		vSent += vSendBytes;
+	}
+	return vSent == _Length;
+}
+
+// posix : 接收所有数据
+_XPOSIXAPI_ int __xcall__ x_socket_recvfrom_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags, struct sockaddr* _From, socklen_t* _FromLen)
+{
+	char*		vBytes = (char*)_Buffer;
+	int		vSent = 0;
+	while (vSent < _Length)
+	{
+		int		vSendBytes = x_socket_recvfrom(_Socket, vBytes + vSent, _Length - vSent, _Flags, _From, _FromLen);
+		if (vSendBytes <= 0)
+		{
+			break;
+		}
+		vSent += vSendBytes;
+	}
+	return vSent == _Length;
+}
+
+// posix : 发送所有数据
+_XPOSIXAPI_ bool __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags)
+{
+	const char*	vBytes = (const char*)_Buffer;
+	int		vSent = 0;
+	while (vSent < _Length)
+	{
+		int		vSendBytes = x_socket_send(_Socket, vBytes + vSent, _Length - vSent, _Flags);
+		if (vSendBytes <= 0)
+		{
+			break;
+		}
+		vSent += vSendBytes;
+	}
+	return vSent == _Length;
+}
+
+// posix : 发送所有数据
+_XPOSIXAPI_ bool __xcall__ x_socket_sendto_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen)
+{
+	const char*	vBytes = (const char*)_Buffer;
+	int		vSent = 0;
+	while (vSent < _Length)
+	{
+		int		vSendBytes = x_socket_sendto(_Socket, vBytes + vSent, _Length - vSent, _Flags, _To, _ToLen);
+		if (vSendBytes <= 0)
+		{
+			break;
+		}
+		vSent += vSendBytes;
+	}
+	return vSent == _Length;
+}
+
+
+
+// 在两个套接字之间传输数据
 _XPOSIXAPI_ int __xcall__ x_socket_transfer(x_socket_t _Socket1, x_socket_t _Socket2)
 {
 	if(_Socket1 == INVALID_SOCKET || _Socket2 == INVALID_SOCKET)
@@ -571,6 +641,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_transfer(x_socket_t _Socket1, x_socket_t _Soc
 					// The peer socket is closed
 					break;
 				}
+
 				int		vSent = 0;
 				while (vSent < vReadBytes)
 				{
