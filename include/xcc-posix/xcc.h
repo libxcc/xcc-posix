@@ -8,6 +8,7 @@
 #include <xcc-posix/endian.h>
 #include <xcc-posix/filesystem.h>
 #include <xcc-posix/json.h>
+#include <xcc-posix/library.h>
 #include <xcc-posix/locale.h>
 #include <xcc-posix/log.h>
 #include <xcc-posix/memory.h>

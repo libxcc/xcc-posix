@@ -62,19 +62,6 @@ _XPOSIXAPI_ int __xcall__ x_posix_unsetenv(const char* _Name);
 
 
 
-// posix : dlopen
-_XPOSIXAPI_ void* __xcall__ x_posix_dlopen(const char* _Library, int _Mode);
-
-// posix : dlsym
-_XPOSIXAPI_ void* __xcall__ x_posix_dlsym(void* _Handle, const char* _ProcName);
-
-// posix : dlclose
-_XPOSIXAPI_ int __xcall__ x_posix_dlclose(void* _Handle);
-
-
-
-
-
 // Sets the last-error code for the calling thread.
 _XPOSIXAPI_ void __xcall__ x_system_set_last_error(int _Error);
 

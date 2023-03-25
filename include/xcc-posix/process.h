@@ -14,16 +14,17 @@ typedef				DWORD 				x_process_id_t;
 typedef				void*				x_process_stream_t;
 typedef				pid_t 				x_process_id_t;
 #endif
+typedef 			x_uint32_t 			x_pid_t;
 
 // Maximum allowed path length
-#define 			_X_PROCESS_MAX_NAME		256
-#define 			_X_PROCESS_MAX_PATH		4096
+#define 			X_PROC_MAX_NAME			256
+#define 			X_PROC_MAX_PATH			4096
 
 // process data type
 typedef struct _XCC_process_data
 {
-	char 			name[_X_PROCESS_MAX_NAME];
-	char 			path[_X_PROCESS_MAX_PATH];
+	char 			name[X_PROC_MAX_NAME];
+	char 			path[X_PROC_MAX_PATH];
 	x_process_id_t		id;
 }x_process_data_t;
 
@@ -54,6 +55,20 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_getppid(void);
 _XPOSIXAPI_ int __xcall__ x_posix_kill(pid_t _Pid, int _Sig);
 
 
+
+// Process: 将行参数转换为列表参数
+_XPOSIXAPI_ char** __xcall__ x_proc_arg_to_list(const char* _ArgLine);
+
+// Process: 将列表参数转换为行参数
+_XPOSIXAPI_ char* __xcall__ x_proc_arg_to_line(const char* const * _ArgList);
+
+// Process: 释放列表参数
+_XPOSIXAPI_ void __xcall__ x_proc_arg_free(char** _ArgList);
+
+
+
+// Process: 返回当前进程ID
+_XPOSIXAPI_ x_pid_t __xcall__ x_proc_get_id();
 
 
 

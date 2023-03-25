@@ -236,7 +236,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_ppoll(struct pollfd* _Fds, nfds_t _Count, con
 // 检查套接字是否连接，已连接返回1，未连接返回0，异常返回-1。
 _XPOSIXAPI_ int __xcall__ x_socket_is_connected(x_socket_t _Socket, unsigned int _Timeout)
 {
-	if(_Socket == SOCKET_ERROR)
+	if(_Socket == X_INVALID_SOCKET)
 	{
 		return -1;
 	}
@@ -253,7 +253,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_is_connected(x_socket_t _Socket, unsigned int
 	{
 		return 1;
 	}
-	if (vSync == SOCKET_ERROR && (errno == EWOULDBLOCK || errno == EINTR))
+	if (vSync == X_SOCKET_ERROR && (errno == EWOULDBLOCK || errno == EINTR))
 	{
 		// 没有数据可供接收
 		return 1;
@@ -299,16 +299,17 @@ _XPOSIXAPI_ int __xcall__ x_socket_is_readable(x_socket_t _Socket, unsigned int 
 	int		vSelect = select((int)_Socket + 1, &vFDS_Read, NULL, &vFDS_Except, &vTimeout);
 	if(vSelect > 0)
 	{
-		if(FD_ISSET(_Socket, &vFDS_Read))
-		{
-			return 1;
-		}
-		else if(FD_ISSET(_Socket, &vFDS_Except))
+		if(FD_ISSET(_Socket, &vFDS_Except))
 		{
 			return -1;
 		}
+		else if(FD_ISSET(_Socket, &vFDS_Read))
+		{
+			return 1;
+		}
+		return 0;
 	}
-	return 0;
+	return vSelect == 0 ? 0 : -1;
 }
 
 // 检查socket是否可写，可写返回1，不可写返回0，异常返回-1。
@@ -328,16 +329,17 @@ _XPOSIXAPI_ int __xcall__ x_socket_is_writable(x_socket_t _Socket, unsigned int 
 	int		vSelect = select((int)_Socket + 1, NULL, &vFDS_Write, &vFDS_Except, &vTimeout);
 	if(vSelect > 0)
 	{
-		if(FD_ISSET(_Socket, &vFDS_Write))
-		{
-			return 1;
-		}
-		else if(FD_ISSET(_Socket, &vFDS_Except))
+		if(FD_ISSET(_Socket, &vFDS_Except))
 		{
 			return -1;
 		}
+		else if(FD_ISSET(_Socket, &vFDS_Write))
+		{
+			return 1;
+		}
+		return 0;
 	}
-	return 0;
+	return vSelect == 0 ? 0 : -1;
 }
 
 // 检查套接字状态。 三种状态至少要传入一个值
@@ -512,68 +514,68 @@ _XPOSIXAPI_ char* __xcall__ x_socket_address_to_string(const struct sockaddr* _A
 _XPOSIXAPI_ int __xcall__ x_socket_recv_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags)
 {
 	char*		vBytes = (char*)_Buffer;
-	int		vSent = 0;
-	while (vSent < _Length)
+	int		vSyncSize = 0;
+	while (vSyncSize < _Length)
 	{
-		int		vSendBytes = x_socket_recv(_Socket, vBytes + vSent, _Length - vSent, _Flags);
-		if (vSendBytes <= 0)
+		int		vRecvSize = x_socket_recv(_Socket, vBytes + vSyncSize, _Length - vSyncSize, _Flags);
+		if (vRecvSize <= 0)
 		{
 			break;
 		}
-		vSent += vSendBytes;
+		vSyncSize += vRecvSize;
 	}
-	return vSent == _Length;
+	return vSyncSize;
 }
 
 // posix : 接收所有数据
 _XPOSIXAPI_ int __xcall__ x_socket_recvfrom_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags, struct sockaddr* _From, socklen_t* _FromLen)
 {
 	char*		vBytes = (char*)_Buffer;
-	int		vSent = 0;
-	while (vSent < _Length)
+	int		vSyncSize = 0;
+	while (vSyncSize < _Length)
 	{
-		int		vSendBytes = x_socket_recvfrom(_Socket, vBytes + vSent, _Length - vSent, _Flags, _From, _FromLen);
-		if (vSendBytes <= 0)
+		int		vRecvSize = x_socket_recvfrom(_Socket, vBytes + vSyncSize, _Length - vSyncSize, _Flags, _From, _FromLen);
+		if (vRecvSize <= 0)
 		{
 			break;
 		}
-		vSent += vSendBytes;
+		vSyncSize += vRecvSize;
 	}
-	return vSent == _Length;
+	return vSyncSize;
 }
 
 // posix : 发送所有数据
-_XPOSIXAPI_ bool __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags)
+_XPOSIXAPI_ int __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags)
 {
 	const char*	vBytes = (const char*)_Buffer;
-	int		vSent = 0;
-	while (vSent < _Length)
+	int		vSyncSize = 0;
+	while (vSyncSize < _Length)
 	{
-		int		vSendBytes = x_socket_send(_Socket, vBytes + vSent, _Length - vSent, _Flags);
-		if (vSendBytes <= 0)
+		int		vSendSize = x_socket_send(_Socket, vBytes + vSyncSize, _Length - vSyncSize, _Flags);
+		if (vSendSize <= 0)
 		{
 			break;
 		}
-		vSent += vSendBytes;
+		vSyncSize += vSendSize;
 	}
-	return vSent == _Length;
+	return vSyncSize;
 }
 
 // posix : 发送所有数据
-_XPOSIXAPI_ bool __xcall__ x_socket_sendto_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen)
+_XPOSIXAPI_ int __xcall__ x_socket_sendto_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen)
 {
 	const char*	vBytes = (const char*)_Buffer;
-	int		vSent = 0;
-	while (vSent < _Length)
+	int		vSyncSize = 0;
+	while (vSyncSize < _Length)
 	{
-		int		vSendBytes = x_socket_sendto(_Socket, vBytes + vSent, _Length - vSent, _Flags, _To, _ToLen);
-		if (vSendBytes <= 0)
+		int		vSendSize = x_socket_sendto(_Socket, vBytes + vSyncSize, _Length - vSyncSize, _Flags, _To, _ToLen);
+		if (vSendSize <= 0)
 		{
 			break;
 		}
-		vSent += vSendBytes;
+		vSyncSize += vSendSize;
 	}
-	return vSent == _Length;
+	return vSyncSize;
 }
 
 

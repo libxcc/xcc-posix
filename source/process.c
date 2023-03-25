@@ -185,6 +185,195 @@ _XPOSIXAPI_ int __xcall__ x_posix_kill(pid_t _Pid, int _Sig)
 
 
 
+// Process: 参数中的空格是否已经被双引号包住
+static bool __xcall__ x_proc_arg_space_is_package(const char* _ArgI)
+{
+	bool		vIsPackage = false;
+	x_size_t 	vSizeI = x_posix_strlen(_ArgI);
+
+	for(x_size_t vPos = 0; vPos < vSizeI; ++vPos)
+	{
+		char 		vCharI = _ArgI[vPos];
+		if(vCharI == ' ' && !vIsPackage)
+		{
+			return false;
+		}
+		if(vCharI == '\"')
+		{
+			vIsPackage = !vIsPackage;
+		}
+	}
+
+	return true;
+}
+
+// Process: 将行参数转换为列表参数
+_XPOSIXAPI_ char** __xcall__ x_proc_arg_to_list(const char* _ArgLine)
+{
+	if(_ArgLine == NULL)
+	{
+		return NULL;
+	}
+
+	char**		vArgList = NULL;
+	char*		vArgTemp = x_posix_strdup(_ArgLine);
+	x_size_t	vArgSize = x_posix_strlen(_ArgLine);
+	x_size_t 	vArgPos = 0;
+	x_size_t 	vArgCount = 0;
+	bool		vArgPackage = false;
+
+	if(vArgTemp == NULL || vArgTemp[0] == ' ')
+	{
+		return NULL;
+	}
+
+	// 计算子项数量
+	for(x_size_t vIndex = 0; vIndex < vArgSize; ++vIndex)
+	{
+		char 		vArgI = vArgTemp[vIndex];
+		if(vArgI == '\"')
+		{
+			vArgPackage = !vArgPackage;
+		}
+		if(vArgI == ' ' && !vArgPackage)
+		{
+			vArgCount += 1;
+			vArgTemp[vIndex] = 0;		// 修改空格为 \0 分割
+		}
+	}
+	// 参数引号不匹配
+	if(vArgPackage)
+	{
+		x_posix_free(vArgTemp);
+		return NULL;
+	}
+	vArgCount += 1;
+
+	// 申请内存
+	vArgList = (char**)x_posix_malloc(sizeof(char*) * (vArgCount + 1));
+	x_posix_memset(vArgList, 0, sizeof(char*) * (vArgCount + 1));
+
+	// 拷贝参数
+	for(x_size_t vIndex = 0; vIndex < vArgCount; ++vIndex)
+	{
+		char*		vArgI = vArgTemp + vArgPos;
+		x_size_t 	vSizeI = x_posix_strlen(vArgI);
+		if(vArgI == NULL || 0 == vSizeI || (vArgI[0] == '\"' && vSizeI <= 2))
+		{
+			x_proc_arg_free(vArgList);
+			x_posix_free(vArgTemp);
+			return NULL;
+		}
+
+		if(vArgI[0] == '\"')
+		{
+			vArgList[vIndex] = x_posix_strndup(vArgI + 1, vSizeI - 2);
+		}
+		else
+		{
+			vArgList[vIndex] = x_posix_strdup(vArgI);
+		}
+		vArgPos += x_posix_strlen(vArgI);
+		vArgPos += 1;
+	}
+
+	x_posix_free(vArgTemp);
+	return vArgList;
+}
+
+// Process: 将列表参数转换为行参数
+_XPOSIXAPI_ char* __xcall__ x_proc_arg_to_line(const char* const * _ArgList)
+{
+	if(_ArgList == NULL)
+	{
+		return NULL;
+	}
+
+	char*		vArgLine = NULL;
+	x_size_t 	vArgSize = 0;
+	x_size_t 	vArgPos = 0;
+
+	// 计算总长度
+	for(x_size_t vIndex = 0; _ArgList[vIndex]; ++vIndex)
+	{
+		const char* 	vArgI = _ArgList[vIndex];
+		x_size_t 	vSizeI = x_posix_strlen(vArgI);
+		if(vSizeI == 0)
+		{
+			return NULL;
+		}
+
+		if(!x_proc_arg_space_is_package(vArgI))
+		{
+			vArgSize += 2;		// 双引号
+		}
+		vArgSize += vSizeI;		// 原始长度
+		vArgSize += 1;			// 空格
+	}
+	if(vArgSize == 0)
+	{
+		return NULL;
+	}
+
+	// 申请内存
+	vArgLine = x_posix_malloc(vArgSize);
+	if(vArgLine == NULL)
+	{
+		return NULL;
+	}
+
+	// 拷贝参数
+	for(x_size_t vIndex = 0; _ArgList[vIndex]; ++vIndex)
+	{
+		const char* 	vArgI = _ArgList[vIndex];
+		x_size_t 	vSizeI = x_posix_strlen(vArgI);
+
+		if(!x_proc_arg_space_is_package(vArgI))
+		{
+			x_posix_memcpy(vArgLine + vArgPos, "\"", 1);	// "
+			vArgPos += 1;
+		}
+
+		x_posix_memcpy(vArgLine + vArgPos, vArgI, vSizeI);	// 字符串
+		vArgPos += vSizeI;
+
+		if(!x_proc_arg_space_is_package(vArgI))
+		{
+			x_posix_memcpy(vArgLine + vArgPos, "\"", 1);	// "
+			vArgPos += 1;
+		}
+
+		x_posix_memcpy(vArgLine + vArgPos, " ", 1);		// 空格
+		vArgPos += 1;
+	}
+
+	// 将末尾空格修改为\0
+	vArgLine[vArgSize - 1] = 0;
+
+	return vArgLine;
+}
+
+// Process: 释放列表参数
+_XPOSIXAPI_ void __xcall__ x_proc_arg_free(char** _ArgList)
+{
+	if(_ArgList)
+	{
+		for(x_size_t vIndex = 0; _ArgList[vIndex]; ++vIndex)
+		{
+			x_posix_free(_ArgList[vIndex]);
+		}
+		x_posix_free(_ArgList);
+	}
+}
+
+
+
+// Process: 返回当前进程ID
+_XPOSIXAPI_ x_pid_t __xcall__ x_proc_get_id()
+{
+	return (x_pid_t)x_posix_getpid();
+}
+
 
 
 // This function returns the process identifier of the calling process.
@@ -318,7 +507,7 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_process_id_t _ProcessID, x_
 	}
 
 	// The first module under the process is the address of its own process
-	DWORD		vReturnLength = GetModuleFileNameExA(vHandle, NULL, _ProcessData->path, _X_PROCESS_MAX_PATH);
+	DWORD		vReturnLength = GetModuleFileNameExA(vHandle, NULL, _ProcessData->path, X_PROC_MAX_PATH);
 	if(vReturnLength == 0)
 	{
 		return x_posix_seterrno(EFAULT);
@@ -332,12 +521,12 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_process_id_t _ProcessID, x_
 	return 0;
 #endif
 #if defined(XCC_SYSTEM_LINUX)
-	char		vProcessFind[_X_PROCESS_MAX_PATH];
+	char		vProcessFind[X_PROC_MAX_PATH];
 	sprintf(vProcessFind, "/proc/%lld", (long long)_ProcessID);
 	strcat(vProcessFind, "/exe");
 
-	int		vCount = readlink(vProcessFind, _ProcessData->path, _X_PROCESS_MAX_PATH);
-	if(0 <= vCount || vCount <= _X_PROCESS_MAX_PATH)
+	int		vCount = readlink(vProcessFind, _ProcessData->path, X_PROC_MAX_PATH);
+	if(0 <= vCount || vCount <= X_PROC_MAX_PATH)
 	{
 		if(strlen(_ProcessData->path))
 		{
@@ -352,8 +541,8 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_process_id_t _ProcessID, x_
 	return x_posix_errno();
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
-	int		vStatusName = proc_name(_ProcessID, _ProcessData->name, _X_PROCESS_MAX_NAME);
-	int		vStatusPath = proc_pidpath(_ProcessID, _ProcessData->path, _X_PROCESS_MAX_PATH);
+	int		vStatusName = proc_name(_ProcessID, _ProcessData->name, X_PROC_MAX_NAME);
+	int		vStatusPath = proc_pidpath(_ProcessID, _ProcessData->path, X_PROC_MAX_PATH);
 	return vStatusName == 0 &&  vStatusPath == 0;
 #endif
 }

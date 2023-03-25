@@ -1,5 +1,6 @@
 ﻿#include <source/os/ntdll.h>
 #include <xcc-posix/system.h>
+#include <xcc-posix/library.h>
 
 
 

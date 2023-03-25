@@ -15,6 +15,7 @@ typedef				HANDLE				x_thread_t;
 #else
 typedef				pthread_t			x_thread_t;
 #endif
+
 #if defined(XCC_SYSTEM_LINUX)
 #define X_THREAD_INVALID_HANDLE					((x_thread_t)(0))
 #else

@@ -143,10 +143,10 @@ _XPOSIXAPI_ int __xcall__ x_socket_recv_all(x_socket_t _Socket, void* _Buffer, i
 _XPOSIXAPI_ int __xcall__ x_socket_recvfrom_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags, struct sockaddr* _From, socklen_t* _FromLen);
 
 // posix : 发送所有数据
-_XPOSIXAPI_ bool __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags);
+_XPOSIXAPI_ int __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags);
 
 // posix : 发送所有数据
-_XPOSIXAPI_ bool __xcall__ x_socket_sendto_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen);
+_XPOSIXAPI_ int __xcall__ x_socket_sendto_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen);
 
 
 

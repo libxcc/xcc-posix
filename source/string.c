@@ -649,10 +649,28 @@ _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsrev(wchar_t* _String)
 // posix : strutow
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_strutow(const char* _UTF8)
 {
+	if(_UTF8 == NULL)
+	{
+		return NULL;
+	}
+
 	wchar_t*	vUnicode = NULL;
 	size_t 		vLength = x_posix_utftowcs(_UTF8, NULL, 0);
 	if(vLength == (size_t)-1)
 	{
+#if defined(XCC_SYSTEM_WINDOWS)
+		int 		vLengthW = MultiByteToWideChar(CP_UTF8, 0, _UTF8, -1, NULL, 0);
+		if(vLengthW > 0)
+		{
+			vUnicode = x_posix_malloc(sizeof(wchar_t) * (vLengthW + XCC_STDIO_VSNPRINTF_EXTRA));
+			if(vUnicode)
+			{
+				x_posix_memset(vUnicode, 0, sizeof(wchar_t) * (vLength + XCC_STDIO_VSNPRINTF_EXTRA));
+				MultiByteToWideChar(CP_UTF8, 0, _UTF8, -1, vUnicode, vLengthW);
+				return vUnicode;
+			}
+		}
+#endif
 		return NULL;
 	}
 
@@ -691,6 +709,19 @@ _XPOSIXAPI_ char* __xcall__ x_posix_strwtou(const wchar_t* _UNICODE)
 	size_t		vLength = x_posix_wcstoutf(_UNICODE, NULL, 0);
 	if(vLength == (size_t)-1)
 	{
+#if defined(XCC_SYSTEM_WINDOWS)
+		int 		vLengthU = WideCharToMultiByte(CP_UTF8, 0, _UNICODE, -1, NULL, 0, NULL, NULL);
+		if(vLengthU > 0)
+		{
+			vUtf8 = x_posix_malloc(sizeof(char) * (vLengthU + XCC_STDIO_VSNPRINTF_EXTRA));
+			if(vUtf8)
+			{
+				x_posix_memset(vUtf8, 0, sizeof(char) * (vLength + XCC_STDIO_VSNPRINTF_EXTRA));
+				WideCharToMultiByte(CP_UTF8, 0, _UNICODE, -1, vUtf8, vLengthU, NULL, NULL);
+				return vUtf8;
+			}
+		}
+#endif
 		return NULL;
 	}
 
