@@ -6,26 +6,25 @@
 XCC_CXX_EXTERN_BEGIN
 
 
-// X-Series type definition : x_process_stream_t
+// X-Series type definition : x_proc_find_t
 #if defined(XCC_SYSTEM_WINDOWS)
-typedef				HANDLE 				x_process_stream_t;
 typedef				DWORD 				x_process_id_t;
 #else
-typedef				void*				x_process_stream_t;
 typedef				pid_t 				x_process_id_t;
 #endif
-typedef 			x_uint32_t 			x_pid_t;
+typedef 			x_uint32_t 			x_pid_type;
+typedef 			void*				x_proc_find_t;
 
-// Maximum allowed path length
+// Process: Maximum allowed path length
 #define 			X_PROC_MAX_NAME			256
 #define 			X_PROC_MAX_PATH			4096
 
-// process data type
-typedef struct _XCC_process_data
+// Process: process data type
+typedef struct x_process_data_t
 {
 	char 			name[X_PROC_MAX_NAME];
 	char 			path[X_PROC_MAX_PATH];
-	x_process_id_t		id;
+	x_pid_type		id;
 }x_process_data_t;
 
 
@@ -67,36 +66,33 @@ _XPOSIXAPI_ void __xcall__ x_proc_arg_free(char** _ArgList);
 
 
 
-// Process: 返回当前进程ID
-_XPOSIXAPI_ x_pid_t __xcall__ x_proc_get_id();
+// Process: Returns the current process ID
+_XPOSIXAPI_ x_pid_type __xcall__ x_proc_get_id();
 
 
 
-// This function returns the process identifier of the calling process.
-_XPOSIXAPI_ x_process_id_t __xcall__ x_process_get_id();
-
-// Enable process privilege (Windows only)
+// Process: Enable process privilege (Windows only)
 _XPOSIXAPI_ int __xcall__ x_process_enable_privilege();
 
-// Kill the process with the specified process id
-_XPOSIXAPI_ int __xcall__ x_process_kill_id(x_process_id_t _ProcessID, int _Signal);
+// Process: Kill the process with the specified process id
+_XPOSIXAPI_ int __xcall__ x_process_kill_id(x_pid_type _ProcessID, int _Signal);
 
-// Kill the process with the specified process name
+// Process: Kill the process with the specified process name
 _XPOSIXAPI_ int __xcall__ x_process_kill_name(const char* _ProcessName, int _Signal);
 
-// Get data according to process ID
-_XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_process_id_t _ProcessID, x_process_data_t* _ProcessData);
+// Process: Get data according to process ID
+_XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_pid_type _ProcessID, x_process_data_t* _ProcessData);
 
 
 
-// Process lookup start
-_XPOSIXAPI_ x_process_stream_t __xcall__ x_process_find_first(x_process_data_t* _ProcessData);
+// Process: Start traversing the process list.
+_XPOSIXAPI_ x_proc_find_t __xcall__ x_process_find_first(x_process_data_t* _ProcessData);
 
-// Find the next process. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_process_find_next(x_process_stream_t _Handle, x_process_data_t* _ProcessData);
+// Process: Find the next process. If successful returns 0, Failure returned error code.
+_XPOSIXAPI_ int __xcall__ x_process_find_next(x_proc_find_t _Handle, x_process_data_t* _ProcessData);
 
-// This function closes the specified search handle. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_process_find_close(x_process_stream_t _Handle);
+// Process: Close the find handle. If successful returns 0, Failure returned error code.
+_XPOSIXAPI_ int __xcall__ x_process_find_close(x_proc_find_t _Handle);
 
 
 

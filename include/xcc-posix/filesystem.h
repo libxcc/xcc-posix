@@ -249,7 +249,7 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_path_dos_to_native(const char* _DosPath, 
 
 
 
-// 查询文件系统空间
+// Filesystem: Query file system space
 _XPOSIXAPI_ int __xcall__ x_posix_fs_space(const char* _Path, x_fs_space_t* _Space);
 
 

@@ -368,21 +368,15 @@ _XPOSIXAPI_ void __xcall__ x_proc_arg_free(char** _ArgList)
 
 
 
-// Process: 返回当前进程ID
-_XPOSIXAPI_ x_pid_t __xcall__ x_proc_get_id()
+// Process: Returns the current process ID
+_XPOSIXAPI_ x_pid_type __xcall__ x_proc_get_id()
 {
-	return (x_pid_t)x_posix_getpid();
+	return (x_pid_type)x_posix_getpid();
 }
 
 
 
-// This function returns the process identifier of the calling process.
-_XPOSIXAPI_ x_process_id_t __xcall__ x_process_get_id()
-{
-	return (x_process_id_t)x_posix_getpid();
-}
-
-// Enable process privilege (Windows only)
+// Process: Enable process privilege (Windows only)
 _XPOSIXAPI_ int __xcall__ x_process_enable_privilege()
 {
 	int 		vStatus = -1;
@@ -405,8 +399,8 @@ _XPOSIXAPI_ int __xcall__ x_process_enable_privilege()
 	return vStatus;
 }
 
-// Kill the process with the specified process ID
-_XPOSIXAPI_ int __xcall__ x_process_kill_id(x_process_id_t _ProcessID, int _Signal)
+// Process: Kill the process with the specified process ID
+_XPOSIXAPI_ int __xcall__ x_process_kill_id(x_pid_type _ProcessID, int _Signal)
 {
 	int		vSync = 0;
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -451,7 +445,7 @@ _XPOSIXAPI_ int __xcall__ x_process_kill_id(x_process_id_t _ProcessID, int _Sign
 	return vSync;
 }
 
-// Kill the process with the specified process name
+// Process: Kill the process with the specified process name
 _XPOSIXAPI_ int __xcall__ x_process_kill_name(const char* _ProcessName, int _Signal)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
@@ -463,7 +457,7 @@ _XPOSIXAPI_ int __xcall__ x_process_kill_name(const char* _ProcessName, int _Sig
 
 	int 				vKillStatus = ENOEXEC;
 	x_process_data_t		vProcessData;
-	x_process_stream_t		vStream = x_process_find_first(&vProcessData);
+	x_proc_find_t		vStream = x_process_find_first(&vProcessData);
 	if(vStream)
 	{
 		do
@@ -478,8 +472,8 @@ _XPOSIXAPI_ int __xcall__ x_process_kill_name(const char* _ProcessName, int _Sig
 	return vKillStatus;
 }
 
-// Get data according to process ID
-_XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_process_id_t _ProcessID, x_process_data_t* _ProcessData)
+// Process: Get data according to process ID
+_XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_pid_type _ProcessID, x_process_data_t* _ProcessData)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
 	if(_ProcessData == NULL)
@@ -522,7 +516,7 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_process_id_t _ProcessID, x_
 #endif
 #if defined(XCC_SYSTEM_LINUX)
 	char		vProcessFind[X_PROC_MAX_PATH];
-	sprintf(vProcessFind, "/proc/%lld", (long long)_ProcessID);
+	sprintf(vProcessFind, "/proc/%u", _ProcessID);
 	strcat(vProcessFind, "/exe");
 
 	int		vCount = readlink(vProcessFind, _ProcessData->path, X_PROC_MAX_PATH);
@@ -541,23 +535,23 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_process_id_t _ProcessID, x_
 	return x_posix_errno();
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
-	int		vStatusName = proc_name(_ProcessID, _ProcessData->name, X_PROC_MAX_NAME);
-	int		vStatusPath = proc_pidpath(_ProcessID, _ProcessData->path, X_PROC_MAX_PATH);
+	int		vStatusName = proc_name((x_process_id_t)_ProcessID, _ProcessData->name, X_PROC_MAX_NAME);
+	int		vStatusPath = proc_pidpath((x_process_id_t)_ProcessID, _ProcessData->path, X_PROC_MAX_PATH);
 	return vStatusName == 0 &&  vStatusPath == 0;
 #endif
 }
 
 
 
-// Process lookup start
-_XPOSIXAPI_ x_process_stream_t __xcall__ x_process_find_first(x_process_data_t* _ProcessData)
+// Process: Start traversing the process list.
+_XPOSIXAPI_ x_proc_find_t __xcall__ x_process_find_first(x_process_data_t* _ProcessData)
 {
-#if defined(XCC_PARAMETER_VALIDATION)
 	if(_ProcessData == NULL)
 	{
 		return NULL;
 	}
-#endif
+	x_posix_memset(_ProcessData, 0, sizeof(x_process_data_t));
+
 #if defined(XCC_SYSTEM_WINDOWS)
 	PROCESSENTRY32		vProcessEntry32;
 	vProcessEntry32.dwSize = sizeof(vProcessEntry32);
@@ -618,13 +612,13 @@ _XPOSIXAPI_ x_process_stream_t __xcall__ x_process_find_first(x_process_data_t* 
 	vProcessCount = proc_listpids(PROC_ALL_PIDS, 0, vProcessArray, sizeof(pid_t) * vProcessCount);
 	if(vProcessCount <= 0)
 	{
-		free(vProcessArray);
+		x_posix_free(vProcessArray);
 		return NULL;
 	}
 	private_process_find_data*	vHandle = (private_process_find_data*)x_posix_malloc(sizeof(private_process_find_data));
 	if(vHandle == NULL)
 	{
-		free(vProcessArray);
+		x_posix_free(vProcessArray);
 		return NULL;
 	}
 
@@ -652,19 +646,19 @@ _XPOSIXAPI_ x_process_stream_t __xcall__ x_process_find_first(x_process_data_t* 
 		return NULL;
 	}
 
-	return (x_process_stream_t)vHandle;
+	return (x_proc_find_t)vHandle;
 #endif
 }
 
-// Find the next process. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_process_find_next(x_process_stream_t _Handle, x_process_data_t* _ProcessData)
+// Process: Find the next process. If successful returns 0, Failure returned error code.
+_XPOSIXAPI_ int __xcall__ x_process_find_next(x_proc_find_t _Handle, x_process_data_t* _ProcessData)
 {
-#if defined(XCC_PARAMETER_VALIDATION)
 	if(_Handle == NULL || _ProcessData == NULL)
 	{
 		return EINVAL;
 	}
-#endif
+	x_posix_memset(_ProcessData, 0, sizeof(x_process_data_t));
+
 #if defined(XCC_SYSTEM_WINDOWS)
 	PROCESSENTRY32		vProcessEntry32;
 	vProcessEntry32.dwSize = sizeof(vProcessEntry32);
@@ -726,15 +720,14 @@ _XPOSIXAPI_ int __xcall__ x_process_find_next(x_process_stream_t _Handle, x_proc
 #endif
 }
 
-// This function closes the specified search handle. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_process_find_close(x_process_stream_t _Handle)
+// Process: Close the find handle. If successful returns 0, Failure returned error code.
+_XPOSIXAPI_ int __xcall__ x_process_find_close(x_proc_find_t _Handle)
 {
-#if defined(XCC_PARAMETER_VALIDATION)
 	if(_Handle == NULL)
 	{
 		return EINVAL;
 	}
-#endif
+
 #if defined(XCC_SYSTEM_WINDOWS)
 	return CloseHandle(_Handle) == TRUE ? 0 : EFAULT;
 #endif

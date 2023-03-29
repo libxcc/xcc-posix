@@ -31,6 +31,10 @@ typedef struct {
 #define X_INVALID_SOCKET	((x_socket_t)(-1))
 #define X_SOCKET_ERROR		(-1)
 
+#define	X_SOCKET_SHUT_RECV	(0)
+#define	X_SOCKET_SHUT_WRITE	(1)
+#define	X_SOCKET_SHUT_BOTH	(2)
+
 
 // posix : gethostbyname
 _XPOSIXAPI_ struct hostent* __xcall__ x_socket_get_host_by_name(const char* _Name);
