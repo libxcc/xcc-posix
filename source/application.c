@@ -15,12 +15,12 @@
 // Gets the path of the current application
 _XPOSIXAPI_ const char* __xcall__ x_application_native_path()
 {
-	static char		vApplicationPath[X_FILESYSTEM_MAX_PATH] = {0};
+	static char		vApplicationPath[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(vApplicationPath))
 	{
 #if defined(XCC_SYSTEM_WINDOWS)
-		wchar_t		vDirectory[X_FILESYSTEM_MAX_PATH] = { 0 };
-		GetModuleFileNameW(GetModuleHandleW(NULL), vDirectory, X_FILESYSTEM_MAX_PATH);
+		wchar_t		vDirectory[X_FS_MAX_PATH] = { 0 };
+		GetModuleFileNameW(GetModuleHandleW(NULL), vDirectory, X_FS_MAX_PATH);
 		x_string_replace_wchar_t(vDirectory, L'\\', L'/');
 		char*		vDirectoryU = x_posix_strwtou(vDirectory);
 		if(vDirectoryU)
@@ -30,8 +30,8 @@ _XPOSIXAPI_ const char* __xcall__ x_application_native_path()
 		}
 #else
 #if defined(XCC_SYSTEM_DARWIN)
-		char		vDirectory[X_FILESYSTEM_MAX_PATH];
-		uint32_t	vLength = X_FILESYSTEM_MAX_PATH;
+		char		vDirectory[X_FS_MAX_PATH];
+		uint32_t	vLength = X_FS_MAX_PATH;
 		if(_NSGetExecutablePath(vDirectory, &vLength) != 0)
 		{
 			vDirectory[0] = '\0';
@@ -47,9 +47,9 @@ _XPOSIXAPI_ const char* __xcall__ x_application_native_path()
 		}
 		x_posix_strcpy(vApplicationPath, vDirectory);
 #else
-		char		vDirectory[X_FILESYSTEM_MAX_PATH] = { 0 };
-		ssize_t		vCount = readlink("/proc/self/exe", vDirectory, X_FILESYSTEM_MAX_PATH);
-		if(0 <= vCount || vCount <= X_FILESYSTEM_MAX_PATH)
+		char		vDirectory[X_FS_MAX_PATH] = { 0 };
+		ssize_t		vCount = readlink("/proc/self/exe", vDirectory, X_FS_MAX_PATH);
+		if(0 <= vCount || vCount <= X_FS_MAX_PATH)
 		{
 			x_posix_strcpy(vApplicationPath, vDirectory);
 		}
@@ -62,7 +62,7 @@ _XPOSIXAPI_ const char* __xcall__ x_application_native_path()
 // Gets the directory of the current application
 _XPOSIXAPI_ const char* __xcall__ x_application_native_directory()
 {
-	static char	vApplicationDirectory[X_FILESYSTEM_MAX_PATH] = {0};
+	static char	vApplicationDirectory[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(vApplicationDirectory))
 	{
 		const char*	vApplicationPath = x_application_native_path();
@@ -78,7 +78,7 @@ _XPOSIXAPI_ const char* __xcall__ x_application_native_directory()
 // Gets the name of the current application
 _XPOSIXAPI_ const char* __xcall__ x_application_native_name()
 {
-	static char	vApplicationName[X_FILESYSTEM_MAX_PATH] = {0};
+	static char	vApplicationName[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(vApplicationName))
 	{
 		const char*	vApplicationPath = x_application_native_path();
@@ -98,11 +98,11 @@ _XPOSIXAPI_ const char* __xcall__ x_application_native_name()
 // Application com name
 static const char* __xcall__ x_application_com_xanadu_name()
 {
-	static char	_static_com_XCC_name[_X_FILESYSTEM_MAX_NAME] = {0};
+	static char	_static_com_XCC_name[X_FS_MAX_NAME] = {0};
 	if(0 == x_posix_strlen(_static_com_XCC_name))
 	{
 		const char*	vNameSuffix = NULL;
-		char 		vApplicationPrefix[_X_FILESYSTEM_MAX_NAME] = {0};
+		char 		vApplicationPrefix[X_FS_MAX_NAME] = {0};
 		const char*	vApplicationName = x_application_native_name();
 		char*		vApplicationNameL = x_posix_strtolower(vApplicationName);
 		if(vApplicationNameL)
@@ -135,10 +135,10 @@ static const char* __xcall__ x_application_com_xanadu_name()
 // Gets the cache directory of the current application
 _XPOSIXAPI_ const char* __xcall__ x_application_cache_directory()
 {
-	static char	_static_application_cache_directory[X_FILESYSTEM_MAX_PATH] = {0};
+	static char	_static_application_cache_directory[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(_static_application_cache_directory))
 	{
-		char		vApplicationDirectoryCache[X_FILESYSTEM_MAX_PATH] = {0};
+		char		vApplicationDirectoryCache[X_FS_MAX_PATH] = {0};
 		const char*	vComXanaduName = x_application_com_xanadu_name();
 		const char*	vSystemDirectory = x_system_cache_directory();
 
@@ -155,10 +155,10 @@ _XPOSIXAPI_ const char* __xcall__ x_application_cache_directory()
 // Gets the config directory of the current application
 _XPOSIXAPI_ const char* __xcall__ x_application_config_directory()
 {
-	static char	_static_application_config_directory[X_FILESYSTEM_MAX_PATH] = {0};
+	static char	_static_application_config_directory[X_FS_MAX_PATH] = {0};
 	if (0 == x_posix_strlen(_static_application_config_directory))
 	{
-		char		vApplicationDirectoryConfig[X_FILESYSTEM_MAX_PATH] = {0};
+		char		vApplicationDirectoryConfig[X_FS_MAX_PATH] = {0};
 		const char*	vComXanaduName = x_application_com_xanadu_name();
 		const char*	vSystemDirectory = x_system_config_directory();
 

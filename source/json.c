@@ -18,8 +18,8 @@ struct x_json_data
 	char*				name;
 	union
 	{
-		x_llong_t 		v_llong;
-		x_double_t 		v_double;
+		x_int64_t 		v_llong;
+		double 		v_double;
 		char*			v_string;
 	}value;
 };
@@ -128,29 +128,29 @@ static const char* __xcall__ x_json_from_string(const char* _String, x_json_t* _
 				if(0 == x_posix_strncmp(vBuffer, "0x", 2))
 				{
 					// number hex
-					x_ullong_t	vValue = x_posix_strtoull(vBuffer, NULL, 16);
-					*_Object = x_json_new_number((x_llong_t)vValue);
+					x_uint64_t	vValue = x_posix_strtoull(vBuffer, NULL, 16);
+					*_Object = x_json_new_number((x_int64_t)vValue);
 				}
 				else if(x_posix_stristr(vBuffer, "E") || x_posix_strstr(vBuffer, "."))
 				{
 					// number double
-					x_double_t 	vValue = x_posix_strtod(vBuffer, NULL);
+					double 	vValue = x_posix_strtod(vBuffer, NULL);
 					*_Object = x_json_new_double(vValue);
 				}
 				else if('+' == vChar)
 				{
-					x_ullong_t	vValue = x_posix_strtoull(vBuffer + 1, NULL, 10);
-					*_Object = x_json_new_number((x_llong_t)vValue);
+					x_uint64_t	vValue = x_posix_strtoull(vBuffer + 1, NULL, 10);
+					*_Object = x_json_new_number((x_int64_t)vValue);
 				}
 				else if('-' == vChar)
 				{
-					x_llong_t	vValue = x_posix_strtoll(vBuffer, NULL, 10);
+					x_int64_t	vValue = x_posix_strtoll(vBuffer, NULL, 10);
 					*_Object = x_json_new_number(vValue);
 				}
 				else
 				{
-					x_ullong_t	vValue = x_posix_strtoull(vBuffer, NULL, 10);
-					*_Object = x_json_new_number((x_llong_t)vValue);
+					x_uint64_t	vValue = x_posix_strtoull(vBuffer, NULL, 10);
+					*_Object = x_json_new_number((x_int64_t)vValue);
 				}
 
 				x_posix_free(vBuffer);
@@ -411,7 +411,7 @@ static x_size_t __xcall__ x_json_to_string(char* _String, x_json_t _Object, int 
 			vSize = x_posix_sprintf(_String, "%lld", _Object->value.v_llong);
 			break;
 		case X_JSON_TYPE_DOUBLE:
-			vSize = x_posix_sprintf(_String, "%lf", (x_double_t)_Object->value.v_double);
+			vSize = x_posix_sprintf(_String, "%lf", (double)_Object->value.v_double);
 			break;
 		case X_JSON_TYPE_STRING:
 			vSize = x_posix_sprintf(_String, "\"%s\"", _Object->value.v_string);
@@ -555,7 +555,7 @@ _XPOSIXAPI_ x_json_t __xcall__ x_json_new_null()
 }
 
 // Create an object of type boolean
-_XPOSIXAPI_ x_json_t __xcall__ x_json_new_boolean(x_bool_t _Value)
+_XPOSIXAPI_ x_json_t __xcall__ x_json_new_boolean(bool _Value)
 {
 	x_json_t	vObject = x_json_new_number(_Value ? 1 : 0);
 	if(vObject)
@@ -566,7 +566,7 @@ _XPOSIXAPI_ x_json_t __xcall__ x_json_new_boolean(x_bool_t _Value)
 }
 
 // Create an object of type number
-_XPOSIXAPI_ x_json_t __xcall__ x_json_new_number(x_llong_t _Value)
+_XPOSIXAPI_ x_json_t __xcall__ x_json_new_number(x_int64_t _Value)
 {
 	x_json_t	vObject = x_json_new_null();
 	if(vObject)
@@ -578,7 +578,7 @@ _XPOSIXAPI_ x_json_t __xcall__ x_json_new_number(x_llong_t _Value)
 }
 
 // Create an object of type number
-_XPOSIXAPI_ x_json_t __xcall__ x_json_new_double(x_double_t _Value)
+_XPOSIXAPI_ x_json_t __xcall__ x_json_new_double(double _Value)
 {
 	x_json_t	vObject = x_json_new_null();
 	if(vObject)
@@ -739,7 +739,7 @@ _XPOSIXAPI_ bool __xcall__ x_json_as_boolean(x_json_t _Object)
 }
 
 // Convert the value of the object to llong
-_XPOSIXAPI_ x_llong_t __xcall__ x_json_as_llong(x_json_t _Object)
+_XPOSIXAPI_ x_int64_t __xcall__ x_json_as_llong(x_json_t _Object)
 {
 	if(_Object->type == X_JSON_TYPE_NUMBER || _Object->type == X_JSON_TYPE_DOUBLE)
 	{
@@ -749,17 +749,17 @@ _XPOSIXAPI_ x_llong_t __xcall__ x_json_as_llong(x_json_t _Object)
 }
 
 // Convert the value of the object to ullong
-_XPOSIXAPI_ x_ullong_t __xcall__ x_json_as_ullong(x_json_t _Object)
+_XPOSIXAPI_ x_uint64_t __xcall__ x_json_as_ullong(x_json_t _Object)
 {
 	if(_Object->type == X_JSON_TYPE_NUMBER || _Object->type == X_JSON_TYPE_DOUBLE)
 	{
-		return (x_ullong_t)_Object->value.v_llong;
+		return (x_uint64_t)_Object->value.v_llong;
 	}
 	return 0;
 }
 
 // Convert the value of the object to double
-_XPOSIXAPI_ x_double_t __xcall__ x_json_as_double(x_json_t _Object)
+_XPOSIXAPI_ double __xcall__ x_json_as_double(x_json_t _Object)
 {
 	if(_Object->type == X_JSON_TYPE_NUMBER || _Object->type == X_JSON_TYPE_DOUBLE)
 	{

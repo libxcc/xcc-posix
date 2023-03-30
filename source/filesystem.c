@@ -440,9 +440,9 @@ _XPOSIXAPI_ int __xcall__ x_posix_rmdir(const char* _Path)
 _XPOSIXAPI_ int __xcall__ x_posix_rmdir_r(const char* _Path)
 {
 	int 			vStatus = 0;
-	x_dir_stream_t		vStream = NULL;
+	x_fs_find_t		vStream = NULL;
 	x_file_data_t		vFileData;
-	char 			vFindPathR[X_FILESYSTEM_MAX_PATH];
+	char 			vFindPathR[X_FS_MAX_PATH];
 	if(_Path == NULL)
 	{
 		return x_posix_seterrno(EINVAL);
@@ -453,7 +453,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_rmdir_r(const char* _Path)
 		return x_posix_seterrno(0);
 	}
 
-	vStream = x_filesystem_find_first(_Path, &vFileData);
+	vStream = x_fs_find_first(_Path, &vFileData);
 	if(vStream == NULL)
 	{
 		return x_posix_seterrno(EIO);
@@ -465,7 +465,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_rmdir_r(const char* _Path)
 			continue;
 		}
 		sprintf(vFindPathR, "%s/%s", _Path, vFileData.name);
-		if(x_filesystem_is_directory(vFileData.mode))
+		if(x_fs_path_is_directory(vFileData.mode))
 		{
 			vStatus = x_posix_rmdir_r(vFindPathR);
 		}
@@ -473,8 +473,8 @@ _XPOSIXAPI_ int __xcall__ x_posix_rmdir_r(const char* _Path)
 		{
 			vStatus = x_posix_remove(vFindPathR);
 		}
-	} while (0 == x_filesystem_find_next(vStream, &vFileData) && 0 == vStatus);
-	x_filesystem_find_close(vStream);
+	} while (0 == x_fs_find_next(vStream, &vFileData) && 0 == vStatus);
+	x_fs_find_close(vStream);
 
 	return x_posix_rmdir(_Path);
 }
@@ -1024,7 +1024,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_fclose(FILE* _Stream)
 _XPOSIXAPI_ unsigned long long __xcall__ x_posix_fsize(const char* _Filename)
 {
 	x_file_stat_t 		vStat;
-	if(0 == x_filesystem_stat(_Filename, &vStat))
+	if(0 == x_fs_path_stat(_Filename, &vStat))
 	{
 		return vStat.st_size;
 	}
@@ -1043,13 +1043,13 @@ _XPOSIXAPI_ DIR* __xcall__ x_posix_opendir(const char* _Name)
 		return NULL;
 	}
 #if defined(XCC_COMPILER_MSVC)
-	wchar_t 		vFindPath[X_FILESYSTEM_MAX_PATH] = {0};
+	wchar_t 		vFindPath[X_FS_MAX_PATH] = {0};
 	wchar_t*		vDirectoryPath = x_posix_strutow(_Name);
 	DIR*			vStream = (DIR*)x_posix_malloc(sizeof(DIR));
 	struct _wfinddata64_t*	vFileInfo = (struct _wfinddata64_t*)x_posix_malloc(sizeof(struct _wfinddata64_t));
 	intptr_t 		vHandle = 0;
 
-	if(vDirectoryPath && vStream && vFileInfo && x_posix_wcslen(vDirectoryPath) < (X_FILESYSTEM_MAX_PATH - 5))
+	if(vDirectoryPath && vStream && vFileInfo && x_posix_wcslen(vDirectoryPath) < (X_FS_MAX_PATH - 5))
 	{
 		x_posix_memset(vStream, 0, sizeof(DIR));
 		x_posix_memset(vFileInfo, 0, sizeof(struct _wfinddata64_t));
@@ -1086,7 +1086,7 @@ _XPOSIXAPI_ struct dirent* __xcall__ x_posix_readdir(DIR* _Stream)
 	struct dirent*		vDirent = NULL;
 	char*			vFileName = NULL;
 	struct _stat64		vFileStat;
-	char 			vFullPath[X_FILESYSTEM_MAX_PATH] = {0};
+	char 			vFullPath[X_FS_MAX_PATH] = {0};
 	int 			vSync = 0;
 	if(_Stream == NULL)
 	{
@@ -1150,7 +1150,7 @@ _XPOSIXAPI_ struct dirent* __xcall__ x_posix_readdir(DIR* _Stream)
 	x_posix_strcpy(vFullPath, _Stream->__directory);
 	x_posix_strcat(vFullPath, "/");
 	x_posix_strcat(vFullPath, vFileName);
-	x_filesystem_stat(vFullPath, &vFileStat);
+	x_fs_path_stat(vFullPath, &vFileStat);
 
 	vDirent->d_ino = vFileStat.st_ino;
 	vDirent->d_type = (unsigned char)vFileStat.st_mode;
@@ -1184,42 +1184,62 @@ _XPOSIXAPI_ int __xcall__ x_posix_closedir(DIR* _Stream)
 
 
 
-
-
-// To format the specified path, you need to call x_posix_free() to free memory. This function replaces \ with /, and removes the at the end /.
-_XPOSIXAPI_ char* __xcall__ x_filesystem_path_format(const char* _Filepath)
+// FS: Convert path to common format
+_XPOSIXAPI_ char* __xcall__ x_fs_path_to_common(const char* _SrcPath)
 {
-	char*		vFilePath = x_posix_strdup(_Filepath);
-	uint64_t 	vLength = x_posix_strlen(vFilePath);
+	char*		vConvertPath = x_posix_strdup(_SrcPath);
+	x_size_t 	vLength = x_posix_strlen(vConvertPath);
 	if(vLength)
 	{
-		for(uint64_t vIndex = 0; vIndex < vLength; ++vIndex)
+		for(x_size_t vIndex = 0; vIndex < vLength; ++vIndex)
 		{
-			if(vFilePath[vIndex] == '\\')
+			if(vConvertPath[vIndex] == '\\')
 			{
-				vFilePath[vIndex] = '/';
+				vConvertPath[vIndex] = '/';
 			}
 		}
-		while(vLength > 1 && vFilePath[vLength - 1] == '/')
+		while(vLength > 1 && vConvertPath[vLength - 1] == '/')
 		{
-			vFilePath[vLength - 1] = '\0';
+			vConvertPath[vLength - 1] = '\0';
 			vLength -= 1;
-		};
+		}
 	}
-	return vFilePath;
+	return vConvertPath;
 }
 
-// Find the last delimiter, including '\\' and '/'
-_XPOSIXAPI_ const char* __xcall__ x_filesystem_path_last_delimiter(const char* _Filepath)
+// FS: Convert path to native format
+_XPOSIXAPI_ char* __xcall__ x_fs_path_to_native(const char* _SrcPath)
 {
-#if defined(XCC_PARAMETER_VALIDATION)
-	if(_Filepath == NULL)
+	char*		vConvertPath = x_posix_strdup(_SrcPath);
+	x_size_t 	vLength = x_posix_strlen(vConvertPath);
+	if(vLength)
+	{
+		for(x_size_t vIndex = 0; vIndex < vLength; ++vIndex)
+		{
+			if(vConvertPath[vIndex] == '/')
+			{
+				vConvertPath[vIndex] = '\\';
+			}
+		}
+		while(vLength > 1 && vConvertPath[vLength - 1] == '\\')
+		{
+			vConvertPath[vLength - 1] = '\0';
+			vLength -= 1;
+		}
+	}
+	return vConvertPath;
+}
+
+// FS: Find the last delimiter
+_XPOSIXAPI_ const char* __xcall__ x_fs_path_find_last_div(const char* _FilePath)
+{
+	if(_FilePath == NULL)
 	{
 		return NULL;
 	}
-#endif
-	const char*	vTail_Linux = x_posix_strrchr(_Filepath, '/');
-	const char*	vTail_Win = x_posix_strrchr(_Filepath, '\\');
+
+	const char*	vTail_Linux = x_posix_strrchr(_FilePath, '/');
+	const char*	vTail_Win = x_posix_strrchr(_FilePath, '\\');
 	if(vTail_Linux && vTail_Win)
 	{
 		if(vTail_Win - vTail_Linux > 0)
@@ -1242,61 +1262,10 @@ _XPOSIXAPI_ const char* __xcall__ x_filesystem_path_last_delimiter(const char* _
 	return NULL;
 }
 
-// win32 : dos path to native path
-_XPOSIXAPI_ int __xcall__ x_filesystem_path_dos_to_native(const char* _DosPath, char* _NativePath, size_t _Length)
-{
-#if defined(XCC_PARAMETER_VALIDATION)
-	if(_DosPath == NULL || _NativePath == NULL || _Length == 0)
-	{
-		return x_posix_seterrno(EINVAL);
-	}
-#endif
-#if defined(XCC_SYSTEM_WINDOWS)
-	char		szDriveStr[X_FILESYSTEM_MAX_PATH] = {0};
-	char		szDrive[3] = {0};
-	char		szDevName[100] = {0};
-	size_t		cchDevName;
-
-	// Get local disk string
-	if(GetLogicalDriveStringsA(X_FILESYSTEM_MAX_PATH, szDriveStr))
-	{
-		for(int vIndex = 0; szDriveStr[vIndex]; vIndex += 4)
-		{
-			if(0 == x_posix_stricmp(&(szDriveStr[vIndex]), "A:\\") || 0 == x_posix_stricmp(&(szDriveStr[vIndex]), "B:\\"))
-			{
-				continue;
-			}
-			szDrive[0] = szDriveStr[vIndex];
-			szDrive[1] = szDriveStr[vIndex + 1];
-			szDrive[2] = '\0';
-
-			// Query DOS name of drive
-			if(FALSE == QueryDosDeviceA(szDrive, szDevName, 100))
-			{
-				return x_posix_seterrno(EACCES);
-			}
-			cchDevName = x_posix_strlen(szDevName);
-			if(x_posix_strnicmp(_DosPath, szDevName, cchDevName) == 0)
-			{
-				if(_Length < (x_posix_strlen(szDrive) + x_posix_strlen(_DosPath) - cchDevName))
-				{
-					return x_posix_seterrno(ENOMEM);
-				}
-				x_posix_strcpy(_NativePath, szDrive);
-				x_posix_strcat(_NativePath, _DosPath + cchDevName);
-				return 0;
-			}
-		}
-	}
-	x_posix_strncpy(_NativePath, _DosPath, _Length);
-#endif
-	return x_posix_seterrno(EEXIST);
-}
 
 
-
-// Filesystem: Query file system space
-_XPOSIXAPI_ int __xcall__ x_posix_fs_space(const char* _Path, x_fs_space_t* _Space)
+// FS: Query the space information of the specified partition
+_XPOSIXAPI_ int __xcall__ x_fs_disk_space(const char* _Path, x_fs_space_t* _Space)
 {
 	if(_Path == NULL || x_posix_strlen(_Path) < 1 || _Space == NULL)
 	{
@@ -1335,8 +1304,8 @@ _XPOSIXAPI_ int __xcall__ x_posix_fs_space(const char* _Path, x_fs_space_t* _Spa
 
 
 
-// Open the specified directory and return to the first child node
-_XPOSIXAPI_ x_dir_stream_t __xcall__ x_filesystem_find_first(const char* _Directory, x_file_data_t* _FileData)
+// FS: Open the specified directory and return to the first child node
+_XPOSIXAPI_ x_fs_find_t __xcall__ x_fs_find_first(const char* _Directory, x_file_data_t* _FileData)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
 	if(_Directory == NULL || _FileData == NULL)
@@ -1347,17 +1316,17 @@ _XPOSIXAPI_ x_dir_stream_t __xcall__ x_filesystem_find_first(const char* _Direct
 
 	// Necessary data construction
 	x_file_stat_t	vFileStat;
-	x_dir_stream_t	vStream = (x_dir_stream_t)x_posix_malloc(sizeof(struct _x_dir_stream));
+	x_fs_find_t	vStream = (x_fs_find_t)x_posix_malloc(sizeof(struct x_fs_find_data));
 	if(vStream == NULL)
 	{
 		return NULL;
 	}
-	x_posix_memset(vStream, 0, sizeof(struct _x_dir_stream));
+	x_posix_memset(vStream, 0, sizeof(struct x_fs_find_data));
 #if defined(XCC_SYSTEM_WINDOWS)
-	char* 			vFormat = x_filesystem_path_format(_Directory);
+	char* 			vFormat = x_fs_path_to_common(_Directory);
 	uint64_t 		vLength = x_posix_strlen(vFormat);
-	char 			vFindPath[X_FILESYSTEM_MAX_PATH];
-	if(vFormat == NULL || (vLength == 0) || (vLength >= (X_FILESYSTEM_MAX_PATH - _X_FILESYSTEM_MAX_NAME)))
+	char 			vFindPath[X_FS_MAX_PATH];
+	if(vFormat == NULL || (vLength == 0) || (vLength >= (X_FS_MAX_PATH - X_FS_MAX_NAME)))
 	{
 		x_posix_free(vStream);
 		x_posix_free(vFormat);
@@ -1400,7 +1369,7 @@ _XPOSIXAPI_ x_dir_stream_t __xcall__ x_filesystem_find_first(const char* _Direct
 	x_posix_strcat(_FileData->path, "/");
 	x_posix_strcat(_FileData->path, vFileName);
 	x_posix_strcpy(_FileData->name, vFileName);
-	x_filesystem_stat(_FileData->path, &vFileStat);
+	x_fs_path_stat(_FileData->path, &vFileStat);
 	_FileData->size = vFileStat.st_size;
 	_FileData->mode = vFileStat.st_mode;
 	_FileData->atime = vFileStat.st_atime;
@@ -1410,8 +1379,8 @@ _XPOSIXAPI_ x_dir_stream_t __xcall__ x_filesystem_find_first(const char* _Direct
 	return vStream;
 }
 
-// Find the next name. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_filesystem_find_next(x_dir_stream_t _Stream, x_file_data_t* _FileData)
+// FS: Find the next name. If successful returns 0, Failure returned - 1.
+_XPOSIXAPI_ int __xcall__ x_fs_find_next(x_fs_find_t _Stream, x_file_data_t* _FileData)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
 	if(_Stream == NULL || _FileData == NULL)
@@ -1443,7 +1412,7 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_find_next(x_dir_stream_t _Stream, x_file_
 	x_posix_strcat(_FileData->path, "/");
 	x_posix_strcat(_FileData->path, vFileName);
 	x_posix_strcpy(_FileData->name, vFileName);
-	x_filesystem_stat(_FileData->path, &vFileStat);
+	x_fs_path_stat(_FileData->path, &vFileStat);
 	_FileData->size = vFileStat.st_size;
 	_FileData->mode = vFileStat.st_mode;
 	_FileData->atime = vFileStat.st_atime;
@@ -1452,8 +1421,8 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_find_next(x_dir_stream_t _Stream, x_file_
 	return 0;
 }
 
-// This function closes the specified search handle. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_filesystem_find_close(x_dir_stream_t _Stream)
+// FS: This function closes the specified search handle. If successful returns 0, Failure returned - 1.
+_XPOSIXAPI_ int __xcall__ x_fs_find_close(x_fs_find_t _Stream)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
 	if(_Stream == NULL)
@@ -1473,8 +1442,131 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_find_close(x_dir_stream_t _Stream)
 
 
 
-// Copy files to another path
-_XPOSIXAPI_ int __xcall__ x_filesystem_copy_path(const char* _Source, const char* _Target)
+// FS: Does the path exist
+_XPOSIXAPI_ bool __xcall__ x_fs_path_exists(const char* _FilePath)
+{
+	return 0 == x_posix_access(_FilePath, F_OK);
+}
+
+// Gets information about the file the path points to
+_XPOSIXAPI_ int __xcall__ x_fs_path_stat(const char* _FilePath, x_file_stat_t* _Stat)
+{
+#if defined(XCC_PARAMETER_VALIDATION)
+	if(_FilePath == NULL || _Stat == NULL)
+	{
+		return x_posix_seterrno(EINVAL);
+	}
+#endif
+#if defined(XCC_SYSTEM_WINDOWS)
+	int 		vSync = -1;
+	wchar_t*	vFilePathW = x_posix_strutow(_FilePath);
+	if(vFilePathW)
+	{
+		vSync = _wstat64(vFilePathW, _Stat);
+		x_posix_free(vFilePathW);
+	}
+	return vSync;
+#else
+	return stat(_FilePath, _Stat);
+#endif
+}
+
+// Analog CXX : std_filesystem_is_block_file
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_block_file(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	UNREFERENCED_PARAMETER(_StatMode);
+	return false;
+#else
+	return S_ISBLK(_StatMode);
+#endif
+}
+
+// Analog CXX : std_filesystem_is_character_file
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_character_file(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	return (_StatMode & S_IFMT) == _S_IFCHR;
+#else
+	return S_ISCHR(_StatMode);
+#endif
+}
+
+// Analog CXX : std_filesystem_is_directory
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_directory(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	return (_StatMode & S_IFMT) == _S_IFDIR;
+#else
+	return S_ISDIR(_StatMode);
+#endif
+}
+
+// Analog CXX : std_filesystem_is_fifo
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_fifo(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	return (_StatMode & S_IFMT) == _S_IFIFO;
+#else
+	return S_ISFIFO(_StatMode);
+#endif
+}
+
+// Analog CXX : std_filesystem_is_other
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_other(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	switch (_StatMode & S_IFMT)
+	{
+		case _S_IFCHR:
+		case _S_IFIFO:
+			return true;
+		default:
+			return false;
+	}
+#else
+	if(S_ISBLK(_StatMode) || S_ISCHR(_StatMode) || S_ISFIFO(_StatMode) || S_ISSOCK(_StatMode))
+	{
+		return true;
+	}
+	return false;
+#endif
+}
+
+// Analog CXX : std_filesystem_is_regular_file
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_regular_file(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	return (_StatMode & S_IFMT) == _S_IFREG;
+#else
+	return S_ISREG(_StatMode);
+#endif
+}
+
+// Analog CXX : std_filesystem_is_socket
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_socket(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	UNREFERENCED_PARAMETER(_StatMode);
+	return false;
+#else
+	return S_ISSOCK(_StatMode);
+#endif
+}
+
+// Analog CXX : std_filesystem_is_symlink
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_symlink(x_uint32_t _StatMode)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	UNREFERENCED_PARAMETER(_StatMode);
+	return false;
+#else
+	return S_ISLNK(_StatMode);
+#endif
+}
+
+// FS: Copy a path to another path
+_XPOSIXAPI_ int __xcall__ x_fs_path_copy(const char* _Source, const char* _Target)
 {
 	int 			vStatus = 0;
 	x_file_stat_t		vStat;
@@ -1483,23 +1575,31 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_copy_path(const char* _Source, const char
 		return x_posix_seterrno(EINVAL);
 	}
 
-	vStatus = x_filesystem_stat(_Source, &vStat);
+	vStatus = x_fs_path_stat(_Source, &vStat);
 	if(0 == vStatus)
 	{
 		if(S_ISDIR(vStat.st_mode))
 		{
-			vStatus = x_filesystem_copy_directory(_Source, _Target);
+			vStatus = x_fs_dir_copy(_Source, _Target);
 		}
 		else
 		{
-			vStatus = x_filesystem_copy_file(_Source, _Target);
+			vStatus = x_fs_file_copy(_Source, _Target);
 		}
 	}
 	return vStatus;
 }
 
-// Copy file to another path
-_XPOSIXAPI_ int __xcall__ x_filesystem_copy_file(const char* _Source, const char* _Target)
+// FS: Rename path
+_XPOSIXAPI_ int __xcall__ x_fs_path_rename(const char* _OldPath, const char* _NewPath)
+{
+	return x_posix_rename(_OldPath, _NewPath);
+}
+
+
+
+// FS: Copy file to another path
+_XPOSIXAPI_ int __xcall__ x_fs_file_copy(const char* _Source, const char* _Target)
 {
 	FILE*			vHandleR = NULL;
 	FILE*			vHandleW = NULL;
@@ -1523,7 +1623,7 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_copy_file(const char* _Source, const char
 		return x_posix_seterrno(EEXIST);
 	}
 
-	vStatus = x_filesystem_stat(_Source, &vStat);
+	vStatus = x_fs_path_stat(_Source, &vStat);
 	if(0 == vStatus)
 	{
 		if(S_ISDIR(vStat.st_mode))
@@ -1596,14 +1696,14 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_copy_file(const char* _Source, const char
 	return vStatus;
 }
 
-// Copy directory to another path
-_XPOSIXAPI_ int __xcall__ x_filesystem_copy_directory(const char* _Source, const char* _Target)
+// FS: Copy directory to another path
+_XPOSIXAPI_ int __xcall__ x_fs_dir_copy(const char* _Source, const char* _Target)
 {
 	int 			vStatus = 0;
-	x_dir_stream_t		vStream = NULL;
+	x_fs_find_t		vStream = NULL;
 	x_file_data_t		vFileData;
-	char 			vFindPathR[X_FILESYSTEM_MAX_PATH];
-	char 			vFindPathW[X_FILESYSTEM_MAX_PATH];
+	char 			vFindPathR[X_FS_MAX_PATH];
+	char 			vFindPathW[X_FS_MAX_PATH];
 	if(_Source == NULL || _Target == NULL)
 	{
 		return x_posix_seterrno(EINVAL);
@@ -1619,7 +1719,7 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_copy_directory(const char* _Source, const
 	}
 
 	x_posix_mkdir_r(_Target, 0755);
-	vStream = x_filesystem_find_first(_Source, &vFileData);
+	vStream = x_fs_find_first(_Source, &vFileData);
 	if(vStream == NULL)
 	{
 		return x_posix_seterrno(EIO);
@@ -1632,141 +1732,16 @@ _XPOSIXAPI_ int __xcall__ x_filesystem_copy_directory(const char* _Source, const
 		}
 		sprintf(vFindPathR, "%s/%s", _Source, vFileData.name);
 		sprintf(vFindPathW, "%s/%s", _Target, vFileData.name);
-		if(x_filesystem_is_directory(vFileData.mode))
+		if(x_fs_path_is_directory(vFileData.mode))
 		{
-			vStatus = x_filesystem_copy_directory(vFindPathR, vFindPathW);
+			vStatus = x_fs_dir_copy(vFindPathR, vFindPathW);
 		}
 		else
 		{
-			vStatus = x_filesystem_copy_file(vFindPathR, vFindPathW);
+			vStatus = x_fs_file_copy(vFindPathR, vFindPathW);
 		}
-	} while (0 == x_filesystem_find_next(vStream, &vFileData) && 0 == vStatus);
-	x_filesystem_find_close(vStream);
+	} while (0 == x_fs_find_next(vStream, &vFileData) && 0 == vStatus);
+	x_fs_find_close(vStream);
 
 	return x_posix_seterrno(vStatus);
-}
-
-
-
-// Analog CXX : std_filesystem_exists
-_XPOSIXAPI_ bool __xcall__ x_filesystem_exists(const char* _FilePath)
-{
-	return 0 == x_posix_access(_FilePath, F_OK);
-}
-
-// Gets information about the file the path points to
-_XPOSIXAPI_ int __xcall__ x_filesystem_stat(const char* _FilePath, x_file_stat_t* _Stat)
-{
-#if defined(XCC_PARAMETER_VALIDATION)
-	if(_FilePath == NULL || _Stat == NULL)
-	{
-		return x_posix_seterrno(EINVAL);
-	}
-#endif
-#if defined(XCC_SYSTEM_WINDOWS)
-	int 		vSync = -1;
-	wchar_t*	vFilePathW = x_posix_strutow(_FilePath);
-	if(vFilePathW)
-	{
-		vSync = _wstat64(vFilePathW, _Stat);
-		x_posix_free(vFilePathW);
-	}
-	return vSync;
-#else
-	return stat(_FilePath, _Stat);
-#endif
-}
-
-// Analog CXX : std_filesystem_is_block_file
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_block_file(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	UNREFERENCED_PARAMETER(_StatMode);
-	return false;
-#else
-	return S_ISBLK(_StatMode);
-#endif
-}
-
-// Analog CXX : std_filesystem_is_character_file
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_character_file(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	return (_StatMode & S_IFMT) == _S_IFCHR;
-#else
-	return S_ISCHR(_StatMode);
-#endif
-}
-
-// Analog CXX : std_filesystem_is_directory
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_directory(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	return (_StatMode & S_IFMT) == _S_IFDIR;
-#else
-	return S_ISDIR(_StatMode);
-#endif
-}
-
-// Analog CXX : std_filesystem_is_fifo
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_fifo(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	return (_StatMode & S_IFMT) == _S_IFIFO;
-#else
-	return S_ISFIFO(_StatMode);
-#endif
-}
-
-// Analog CXX : std_filesystem_is_other
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_other(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	switch (_StatMode & S_IFMT)
-	{
-		case _S_IFCHR:
-		case _S_IFIFO:
-			return true;
-		default:
-			return false;
-	}
-#else
-	if(S_ISBLK(_StatMode) || S_ISCHR(_StatMode) || S_ISFIFO(_StatMode) || S_ISSOCK(_StatMode))
-	{
-		return true;
-	}
-	return false;
-#endif
-}
-
-// Analog CXX : std_filesystem_is_regular_file
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_regular_file(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	return (_StatMode & S_IFMT) == _S_IFREG;
-#else
-	return S_ISREG(_StatMode);
-#endif
-}
-
-// Analog CXX : std_filesystem_is_socket
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_socket(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	UNREFERENCED_PARAMETER(_StatMode);
-	return false;
-#else
-	return S_ISSOCK(_StatMode);
-#endif
-}
-
-// Analog CXX : std_filesystem_is_symlink
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_symlink(uint32_t _StatMode)
-{
-#if defined(XCC_SYSTEM_WINDOWS)
-	UNREFERENCED_PARAMETER(_StatMode);
-	return false;
-#else
-	return S_ISLNK(_StatMode);
-#endif
 }

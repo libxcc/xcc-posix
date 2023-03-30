@@ -7,31 +7,33 @@ XCC_CXX_EXTERN_BEGIN
 
 
 // Maximum allowed path length
-#define 			_X_FILESYSTEM_MAX_NAME		256
-#define 			X_FILESYSTEM_MAX_PATH		4096
+#define 		X_FS_MAX_NAME					(256)
+#define 		X_FS_MAX_PATH					XCC_PATH_MAX
 
-// filesystem handle type definition
-typedef struct _x_dir_stream
+// Filesystem lookup context data
+typedef struct x_fs_find_data
 {
 #if defined(XCC_SYSTEM_WINDOWS)
 	int64_t			handle;
 #else
 	void*			handle;
 #endif
-	char 			dir[X_FILESYSTEM_MAX_PATH];
-}*x_dir_stream_t;
+	char 			dir[X_FS_MAX_PATH];
+}*x_fs_find_t;
+
+// File stat information
 #if defined(XCC_SYSTEM_WINDOWS)
 typedef				struct _stat64			x_file_stat_t;
 #else
 typedef				struct stat			x_file_stat_t;
 #endif
 
-// filesystem data type
-typedef struct _x_file_data_t
+// File attribute information
+typedef struct x_file_data_t
 {
-	char 			dir[X_FILESYSTEM_MAX_PATH];	// Directory name
-	char 			path[X_FILESYSTEM_MAX_PATH];	// File full path
-	char 			name[_X_FILESYSTEM_MAX_NAME];	// File name
+	char 			dir[X_FS_MAX_PATH];		// Directory name
+	char 			path[X_FS_MAX_PATH];		// File full path
+	char 			name[X_FS_MAX_NAME];		// File name
 	uint64_t 		size;				// File size
 	uint32_t 		mode;				// File type and access rights
 	int64_t			atime;				// Last visited time
@@ -39,7 +41,7 @@ typedef struct _x_file_data_t
 	int64_t			ctime;				// Create time
 }x_file_data_t;
 
-// file system space type
+// Filesystem disk space information
 typedef struct x_fs_space_t
 {
 	uint64_t		avail_bytes;
@@ -238,73 +240,76 @@ _XPOSIXAPI_ int __xcall__ x_posix_closedir(DIR* _Stream);
 
 
 
-// To format the specified path, you need to call x_posix_free() to free memory. This function replaces \ with /, and removes the at the end /.
-_XPOSIXAPI_ char* __xcall__ x_filesystem_path_format(const char* _Filepath);
+// FS: Convert path to common format
+_XPOSIXAPI_ char* __xcall__ x_fs_path_to_common(const char* _SrcPath);
 
-// Find the last delimiter, including '\\' and '/'
-_XPOSIXAPI_ const char* __xcall__ x_filesystem_path_last_delimiter(const char* _Filepath);
+// FS: Convert path to native format
+_XPOSIXAPI_ char* __xcall__ x_fs_path_to_native(const char* _SrcPath);
 
-// win32 : dos path to native path
-_XPOSIXAPI_ int __xcall__ x_filesystem_path_dos_to_native(const char* _DosPath, char* _NativePath, size_t _Length);
-
-
-
-// Filesystem: Query file system space
-_XPOSIXAPI_ int __xcall__ x_posix_fs_space(const char* _Path, x_fs_space_t* _Space);
+// FS: Find the last delimiter
+_XPOSIXAPI_ const char* __xcall__ x_fs_path_find_last_div(const char* _FilePath);
 
 
 
-// Open the specified directory and return to the first child node
-_XPOSIXAPI_ x_dir_stream_t __xcall__ x_filesystem_find_first(const char* _Directory, x_file_data_t* _FileData);
-
-// Find the next name. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_filesystem_find_next(x_dir_stream_t _Stream, x_file_data_t* _FileData);
-
-// This function closes the specified search handle. If successful returns 0, Failure returned - 1.
-_XPOSIXAPI_ int __xcall__ x_filesystem_find_close(x_dir_stream_t _Stream);
+// FS: Query the space information of the specified partition
+_XPOSIXAPI_ int __xcall__ x_fs_disk_space(const char* _Path, x_fs_space_t* _Space);
 
 
 
-// Copy files to another path
-_XPOSIXAPI_ int __xcall__ x_filesystem_copy_path(const char* _Source, const char* _Target);
+// FS: Open the specified directory and return to the first child node
+_XPOSIXAPI_ x_fs_find_t __xcall__ x_fs_find_first(const char* _Directory, x_file_data_t* _FileData);
 
-// Copy file to another path
-_XPOSIXAPI_ int __xcall__ x_filesystem_copy_file(const char* _Source, const char* _Target);
+// FS: Find the next name. If successful returns 0, Failure returned - 1.
+_XPOSIXAPI_ int __xcall__ x_fs_find_next(x_fs_find_t _Stream, x_file_data_t* _FileData);
 
-// Copy directory to another path
-_XPOSIXAPI_ int __xcall__ x_filesystem_copy_directory(const char* _Source, const char* _Target);
+// FS: This function closes the specified search handle. If successful returns 0, Failure returned - 1.
+_XPOSIXAPI_ int __xcall__ x_fs_find_close(x_fs_find_t _Stream);
 
 
 
-// Analog CXX : std_filesystem_exists
-_XPOSIXAPI_ bool __xcall__ x_filesystem_exists(const char* _FilePath);
+// FS: Does the path exist
+_XPOSIXAPI_ bool __xcall__ x_fs_path_exists(const char* _FilePath);
 
 // Gets information about the file the path points to
-_XPOSIXAPI_ int __xcall__ x_filesystem_stat(const char* _FilePath, x_file_stat_t* _Stat);
+_XPOSIXAPI_ int __xcall__ x_fs_path_stat(const char* _FilePath, x_file_stat_t* _Stat);
 
 // Analog CXX : std_filesystem_is_block_file
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_block_file(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_block_file(x_uint32_t _StatMode);
 
 // Analog CXX : std_filesystem_is_character_file
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_character_file(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_character_file(x_uint32_t _StatMode);
 
 // Analog CXX : std_filesystem_is_directory
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_directory(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_directory(x_uint32_t _StatMode);
 
 // Analog CXX : std_filesystem_is_fifo
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_fifo(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_fifo(x_uint32_t _StatMode);
 
 // Analog CXX : std_filesystem_is_other
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_other(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_other(x_uint32_t _StatMode);
 
 // Analog CXX : std_filesystem_is_regular_file
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_regular_file(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_regular_file(x_uint32_t _StatMode);
 
 // Analog CXX : std_filesystem_is_socket
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_socket(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_socket(x_uint32_t _StatMode);
 
 // Analog CXX : std_filesystem_is_symlink
-_XPOSIXAPI_ bool __xcall__ x_filesystem_is_symlink(uint32_t _StatMode);
+_XPOSIXAPI_ bool __xcall__ x_fs_path_is_symlink(x_uint32_t _StatMode);
+
+// FS: Copy a path to another path
+_XPOSIXAPI_ int __xcall__ x_fs_path_copy(const char* _Source, const char* _Target);
+
+// FS: Rename path
+_XPOSIXAPI_ int __xcall__ x_fs_path_rename(const char* _OldPath, const char* _NewPath);
+
+
+
+// FS: Copy file to another path
+_XPOSIXAPI_ int __xcall__ x_fs_file_copy(const char* _Source, const char* _Target);
+
+// FS: Copy directory to another path
+_XPOSIXAPI_ int __xcall__ x_fs_dir_copy(const char* _Source, const char* _Target);
 
 
 

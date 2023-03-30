@@ -180,7 +180,7 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_getppid(void)
 // posix : kill
 _XPOSIXAPI_ int __xcall__ x_posix_kill(pid_t _Pid, int _Sig)
 {
-	return x_process_kill_id(_Pid, _Sig);
+	return x_proc_kill_id(_Pid, _Sig);
 }
 
 
@@ -377,7 +377,7 @@ _XPOSIXAPI_ x_pid_type __xcall__ x_proc_get_id()
 
 
 // Process: Enable process privilege (Windows only)
-_XPOSIXAPI_ int __xcall__ x_process_enable_privilege()
+_XPOSIXAPI_ int __xcall__ x_proc_enable_privilege()
 {
 	int 		vStatus = -1;
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -400,7 +400,7 @@ _XPOSIXAPI_ int __xcall__ x_process_enable_privilege()
 }
 
 // Process: Kill the process with the specified process ID
-_XPOSIXAPI_ int __xcall__ x_process_kill_id(x_pid_type _ProcessID, int _Signal)
+_XPOSIXAPI_ int __xcall__ x_proc_kill_id(x_pid_type _ProcessID, int _Signal)
 {
 	int		vSync = 0;
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -446,7 +446,7 @@ _XPOSIXAPI_ int __xcall__ x_process_kill_id(x_pid_type _ProcessID, int _Signal)
 }
 
 // Process: Kill the process with the specified process name
-_XPOSIXAPI_ int __xcall__ x_process_kill_name(const char* _ProcessName, int _Signal)
+_XPOSIXAPI_ int __xcall__ x_proc_kill_name(const char* _ProcessName, int _Signal)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
 	if(_ProcessName == NULL)
@@ -456,24 +456,24 @@ _XPOSIXAPI_ int __xcall__ x_process_kill_name(const char* _ProcessName, int _Sig
 #endif
 
 	int 				vKillStatus = ENOEXEC;
-	x_process_data_t		vProcessData;
-	x_proc_find_t		vStream = x_process_find_first(&vProcessData);
+	x_proc_data_t		vProcessData;
+	x_proc_find_t		vStream = x_proc_find_first(&vProcessData);
 	if(vStream)
 	{
 		do
 		{
 			if(0 == x_posix_strcmp(vProcessData.name, _ProcessName))
 			{
-				vKillStatus = x_process_kill_id(vProcessData.id, _Signal);
+				vKillStatus = x_proc_kill_id(vProcessData.id, _Signal);
 			}
-		}while(x_process_find_next(vStream, &vProcessData) == 0);
-		x_process_find_close(vStream);
+		}while(x_proc_find_next(vStream, &vProcessData) == 0);
+		x_proc_find_close(vStream);
 	}
 	return vKillStatus;
 }
 
 // Process: Get data according to process ID
-_XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_pid_type _ProcessID, x_process_data_t* _ProcessData)
+_XPOSIXAPI_ int __xcall__ x_proc_get_data_by_id(x_pid_type _ProcessID, x_proc_data_t* _ProcessData)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
 	if(_ProcessData == NULL)
@@ -482,7 +482,7 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_pid_type _ProcessID, x_proc
 	}
 #endif
 
-	x_posix_memset(_ProcessData, 0, sizeof(x_process_data_t));
+	x_posix_memset(_ProcessData, 0, sizeof(x_proc_data_t));
 	_ProcessData->id = _ProcessID;
 #if defined(XCC_SYSTEM_WINDOWS)
 
@@ -535,8 +535,8 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_pid_type _ProcessID, x_proc
 	return x_posix_errno();
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
-	int		vStatusName = proc_name((x_process_id_t)_ProcessID, _ProcessData->name, X_PROC_MAX_NAME);
-	int		vStatusPath = proc_pidpath((x_process_id_t)_ProcessID, _ProcessData->path, X_PROC_MAX_PATH);
+	int		vStatusName = proc_name((x_proc_id_t)_ProcessID, _ProcessData->name, X_PROC_MAX_NAME);
+	int		vStatusPath = proc_pidpath((x_proc_id_t)_ProcessID, _ProcessData->path, X_PROC_MAX_PATH);
 	return vStatusName == 0 &&  vStatusPath == 0;
 #endif
 }
@@ -544,13 +544,13 @@ _XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_pid_type _ProcessID, x_proc
 
 
 // Process: Start traversing the process list.
-_XPOSIXAPI_ x_proc_find_t __xcall__ x_process_find_first(x_process_data_t* _ProcessData)
+_XPOSIXAPI_ x_proc_find_t __xcall__ x_proc_find_first(x_proc_data_t* _ProcessData)
 {
 	if(_ProcessData == NULL)
 	{
 		return NULL;
 	}
-	x_posix_memset(_ProcessData, 0, sizeof(x_process_data_t));
+	x_posix_memset(_ProcessData, 0, sizeof(x_proc_data_t));
 
 #if defined(XCC_SYSTEM_WINDOWS)
 	PROCESSENTRY32		vProcessEntry32;
@@ -565,34 +565,34 @@ _XPOSIXAPI_ x_proc_find_t __xcall__ x_process_find_first(x_process_data_t* _Proc
 	{
 		return NULL;
 	};
-	x_process_get_data_by_id(vProcessEntry32.th32ProcessID, _ProcessData);
+	x_proc_get_data_by_id(vProcessEntry32.th32ProcessID, _ProcessData);
 	x_posix_strcpy(_ProcessData->name, vProcessEntry32.szExeFile);
 	return vHandle;
 #endif
 #if defined(XCC_SYSTEM_LINUX)
 	bool			vProcessFind = false;
 	x_file_data_t		vFileData;
-	x_dir_stream_t		vHandle = x_filesystem_find_first("/proc", &vFileData);
+	x_fs_find_t		vHandle = x_fs_find_first("/proc", &vFileData);
 	if(vHandle == NULL)
 	{
 		return NULL;
 	}
 	do
 	{
-		if(x_filesystem_is_directory(vFileData.mode) && strcmp(vFileData.name, ".") != 0 && x_posix_strcmp(vFileData.name, "..") != 0)
+		if(x_fs_path_is_directory(vFileData.mode) && strcmp(vFileData.name, ".") != 0 && x_posix_strcmp(vFileData.name, "..") != 0)
 		{
 			uint64_t	vProcessID = strtoull(vFileData.name, NULL, 10);
 			if(vProcessID)
 			{
 				vProcessFind = true;
-				x_process_get_data_by_id(vProcessID, _ProcessData);
+				x_proc_get_data_by_id(vProcessID, _ProcessData);
 				break;
 			}
 		}
-	}while(x_filesystem_find_next(vHandle, &vFileData) == 0);
+	}while(x_fs_find_next(vHandle, &vFileData) == 0);
 	if(vProcessFind == false)
 	{
-		x_filesystem_find_close(vHandle);
+		x_fs_find_close(vHandle);
 		return NULL;
 	}
 	return vHandle;
@@ -636,7 +636,7 @@ _XPOSIXAPI_ x_proc_find_t __xcall__ x_process_find_first(x_process_data_t* _Proc
 		vProcessFind = true;
 		vHandle->index = vIndex;
 
-		x_process_get_data_by_id(vProcessID, _ProcessData);
+		x_proc_get_data_by_id(vProcessID, _ProcessData);
 		break;
 	}
 	if(vProcessFind == false)
@@ -651,13 +651,13 @@ _XPOSIXAPI_ x_proc_find_t __xcall__ x_process_find_first(x_process_data_t* _Proc
 }
 
 // Process: Find the next process. If successful returns 0, Failure returned error code.
-_XPOSIXAPI_ int __xcall__ x_process_find_next(x_proc_find_t _Handle, x_process_data_t* _ProcessData)
+_XPOSIXAPI_ int __xcall__ x_proc_find_next(x_proc_find_t _Handle, x_proc_data_t* _ProcessData)
 {
 	if(_Handle == NULL || _ProcessData == NULL)
 	{
 		return EINVAL;
 	}
-	x_posix_memset(_ProcessData, 0, sizeof(x_process_data_t));
+	x_posix_memset(_ProcessData, 0, sizeof(x_proc_data_t));
 
 #if defined(XCC_SYSTEM_WINDOWS)
 	PROCESSENTRY32		vProcessEntry32;
@@ -668,22 +668,22 @@ _XPOSIXAPI_ int __xcall__ x_process_find_next(x_proc_find_t _Handle, x_process_d
 		return EEXIST;
 	};
 
-	x_process_get_data_by_id(vProcessEntry32.th32ProcessID, _ProcessData);
+	x_proc_get_data_by_id(vProcessEntry32.th32ProcessID, _ProcessData);
 	x_posix_strcpy(_ProcessData->name, vProcessEntry32.szExeFile);
 	return 0;
 #endif
 #if defined(XCC_SYSTEM_LINUX)
 	bool			vProcessFind = false;
 	x_file_data_t	vFileData;
-	while(x_filesystem_find_next(_Handle, &vFileData) == 0)
+	while(x_fs_find_next(_Handle, &vFileData) == 0)
 	{
-		if(x_filesystem_is_directory(vFileData.mode) && strcmp(vFileData.name, ".") != 0 && x_posix_strcmp(vFileData.name, "..") != 0)
+		if(x_fs_path_is_directory(vFileData.mode) && strcmp(vFileData.name, ".") != 0 && x_posix_strcmp(vFileData.name, "..") != 0)
 		{
 			uint64_t	vProcessID = strtoull(vFileData.name, NULL, 10);
 			if(vProcessID)
 			{
 				vProcessFind = true;
-				x_process_get_data_by_id(vProcessID, _ProcessData);
+				x_proc_get_data_by_id(vProcessID, _ProcessData);
 				break;
 			}
 			break;
@@ -709,7 +709,7 @@ _XPOSIXAPI_ int __xcall__ x_process_find_next(x_proc_find_t _Handle, x_process_d
 		vProcessFind = true;
 		vHandle->index = vIndex;
 
-		x_process_get_data_by_id(vProcessID, _ProcessData);
+		x_proc_get_data_by_id(vProcessID, _ProcessData);
 		break;
 	}
 	if(vProcessFind == false)
@@ -721,7 +721,7 @@ _XPOSIXAPI_ int __xcall__ x_process_find_next(x_proc_find_t _Handle, x_process_d
 }
 
 // Process: Close the find handle. If successful returns 0, Failure returned error code.
-_XPOSIXAPI_ int __xcall__ x_process_find_close(x_proc_find_t _Handle)
+_XPOSIXAPI_ int __xcall__ x_proc_find_close(x_proc_find_t _Handle)
 {
 	if(_Handle == NULL)
 	{
@@ -732,7 +732,7 @@ _XPOSIXAPI_ int __xcall__ x_process_find_close(x_proc_find_t _Handle)
 	return CloseHandle(_Handle) == TRUE ? 0 : EFAULT;
 #endif
 #if defined(XCC_SYSTEM_LINUX)
-	return x_filesystem_find_close(_Handle);
+	return x_fs_find_close(_Handle);
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
 	private_process_find_data*	vHandle = (private_process_find_data*)_Handle;

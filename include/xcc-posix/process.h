@@ -8,9 +8,9 @@ XCC_CXX_EXTERN_BEGIN
 
 // X-Series type definition : x_proc_find_t
 #if defined(XCC_SYSTEM_WINDOWS)
-typedef				DWORD 				x_process_id_t;
+typedef				DWORD 				x_proc_id_t;
 #else
-typedef				pid_t 				x_process_id_t;
+typedef				pid_t 				x_proc_id_t;
 #endif
 typedef 			x_uint32_t 			x_pid_type;
 typedef 			void*				x_proc_find_t;
@@ -20,12 +20,12 @@ typedef 			void*				x_proc_find_t;
 #define 			X_PROC_MAX_PATH			4096
 
 // Process: process data type
-typedef struct x_process_data_t
+typedef struct x_proc_data_t
 {
 	char 			name[X_PROC_MAX_NAME];
 	char 			path[X_PROC_MAX_PATH];
 	x_pid_type		id;
-}x_process_data_t;
+}x_proc_data_t;
 
 
 
@@ -72,27 +72,27 @@ _XPOSIXAPI_ x_pid_type __xcall__ x_proc_get_id();
 
 
 // Process: Enable process privilege (Windows only)
-_XPOSIXAPI_ int __xcall__ x_process_enable_privilege();
+_XPOSIXAPI_ int __xcall__ x_proc_enable_privilege();
 
 // Process: Kill the process with the specified process id
-_XPOSIXAPI_ int __xcall__ x_process_kill_id(x_pid_type _ProcessID, int _Signal);
+_XPOSIXAPI_ int __xcall__ x_proc_kill_id(x_pid_type _ProcessID, int _Signal);
 
 // Process: Kill the process with the specified process name
-_XPOSIXAPI_ int __xcall__ x_process_kill_name(const char* _ProcessName, int _Signal);
+_XPOSIXAPI_ int __xcall__ x_proc_kill_name(const char* _ProcessName, int _Signal);
 
 // Process: Get data according to process ID
-_XPOSIXAPI_ int __xcall__ x_process_get_data_by_id(x_pid_type _ProcessID, x_process_data_t* _ProcessData);
+_XPOSIXAPI_ int __xcall__ x_proc_get_data_by_id(x_pid_type _ProcessID, x_proc_data_t* _ProcessData);
 
 
 
 // Process: Start traversing the process list.
-_XPOSIXAPI_ x_proc_find_t __xcall__ x_process_find_first(x_process_data_t* _ProcessData);
+_XPOSIXAPI_ x_proc_find_t __xcall__ x_proc_find_first(x_proc_data_t* _ProcessData);
 
 // Process: Find the next process. If successful returns 0, Failure returned error code.
-_XPOSIXAPI_ int __xcall__ x_process_find_next(x_proc_find_t _Handle, x_process_data_t* _ProcessData);
+_XPOSIXAPI_ int __xcall__ x_proc_find_next(x_proc_find_t _Handle, x_proc_data_t* _ProcessData);
 
 // Process: Close the find handle. If successful returns 0, Failure returned error code.
-_XPOSIXAPI_ int __xcall__ x_process_find_close(x_proc_find_t _Handle);
+_XPOSIXAPI_ int __xcall__ x_proc_find_close(x_proc_find_t _Handle);
 
 
 

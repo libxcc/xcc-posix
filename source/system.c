@@ -553,11 +553,11 @@ _XPOSIXAPI_ size_t __xcall__ x_system_cpu_cache_line_size(void)
 // The name of the user who is now logged in
 _XPOSIXAPI_ const char* __xcall__ x_system_current_user(void)
 {
-	static char 	_static_system_current_user[X_FILESYSTEM_MAX_PATH] = {0};
+	static char 	_static_system_current_user[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(_static_system_current_user))
 	{
 #if defined(XCC_SYSTEM_WINDOWS)
-		wchar_t		vUserProfileDirectory[X_FILESYSTEM_MAX_PATH] = {0};
+		wchar_t		vUserProfileDirectory[X_FS_MAX_PATH] = {0};
 		HANDLE		vProcess = GetCurrentProcess();
 		HANDLE		vToken = NULL;
 		BOOL		vSync = OpenProcessToken(vProcess, TOKEN_QUERY, &vToken);
@@ -595,7 +595,7 @@ _XPOSIXAPI_ const char* __xcall__ x_system_current_user(void)
 			}
 			else
 			{
-				DWORD		vUserLength = X_FILESYSTEM_MAX_PATH - 1;
+				DWORD		vUserLength = X_FS_MAX_PATH - 1;
 				GetUserNameW(vUserProfileDirectory, &vUserLength);
 			}
 			if(vInfoBuffer)
@@ -622,10 +622,10 @@ _XPOSIXAPI_ const char* __xcall__ x_system_current_user(void)
 // Computer name
 _XPOSIXAPI_ const char* __xcall__ x_system_host_name(void)
 {
-	static char	_static_system_host_name[_X_FILESYSTEM_MAX_NAME] = { 0 };
+	static char	_static_system_host_name[X_FS_MAX_NAME] = { 0 };
 #if defined(XCC_SYSTEM_WINDOWS)
-	wchar_t		vHostName[_X_FILESYSTEM_MAX_NAME] = { 0 };
-	DWORD		vLength = _X_FILESYSTEM_MAX_NAME;
+	wchar_t		vHostName[X_FS_MAX_NAME] = { 0 };
+	DWORD		vLength = X_FS_MAX_NAME;
 	if(GetComputerNameW(vHostName, &vLength))
 	{
 		char*		vHostNameU = x_posix_strwtou(vHostName);
@@ -636,7 +636,7 @@ _XPOSIXAPI_ const char* __xcall__ x_system_host_name(void)
 		}
 	}
 #else
-	gethostname(_static_system_host_name, _X_FILESYSTEM_MAX_NAME);
+	gethostname(_static_system_host_name, X_FS_MAX_NAME);
 #endif
 	return _static_system_host_name;
 }
@@ -644,7 +644,7 @@ _XPOSIXAPI_ const char* __xcall__ x_system_host_name(void)
 // Gets the directory for the current user
 _XPOSIXAPI_ const char* __xcall__ x_system_user_home(void)
 {
-	static char 	_static_system_user_home[X_FILESYSTEM_MAX_PATH] = {0};
+	static char 	_static_system_user_home[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(_static_system_user_home))
 	{
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -664,16 +664,16 @@ _XPOSIXAPI_ const char* __xcall__ x_system_user_home(void)
 // Get system cache directory
 _XPOSIXAPI_ const char* __xcall__ x_system_cache_directory(void)
 {
-	static char	_staticCacheDirectory[X_FILESYSTEM_MAX_PATH] = {0};
+	static char	_staticCacheDirectory[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(_staticCacheDirectory))
 	{
 #if defined(XCC_SYSTEM_WINDOWS)
 		char*		vUtfDirectory = NULL;
-		wchar_t 	vLongDirectory[X_FILESYSTEM_MAX_PATH] = { 0 };
-		wchar_t		vTempDirectory[X_FILESYSTEM_MAX_PATH] = { 0 };
-		if(GetTempPathW(X_FILESYSTEM_MAX_PATH, vTempDirectory))
+		wchar_t 	vLongDirectory[X_FS_MAX_PATH] = { 0 };
+		wchar_t		vTempDirectory[X_FS_MAX_PATH] = { 0 };
+		if(GetTempPathW(X_FS_MAX_PATH, vTempDirectory))
 		{
-			GetLongPathNameW(vTempDirectory, vLongDirectory, X_FILESYSTEM_MAX_PATH);
+			GetLongPathNameW(vTempDirectory, vLongDirectory, X_FS_MAX_PATH);
 			vUtfDirectory = x_posix_strwtou(vLongDirectory);
 			if(vUtfDirectory)
 			{
@@ -691,11 +691,11 @@ _XPOSIXAPI_ const char* __xcall__ x_system_cache_directory(void)
 // Get system config directory
 _XPOSIXAPI_ const char* __xcall__ x_system_config_directory(void)
 {
-	static char	_static_system_config_directory[X_FILESYSTEM_MAX_PATH] = {0};
+	static char	_static_system_config_directory[X_FS_MAX_PATH] = {0};
 	if(0 == x_posix_strlen(_static_system_config_directory))
 	{
 #if defined(XCC_SYSTEM_WINDOWS)
-		wchar_t		vLocalDirectory[X_FILESYSTEM_MAX_PATH] = { 0 };
+		wchar_t		vLocalDirectory[X_FS_MAX_PATH] = { 0 };
 		if(SHGetSpecialFolderPathW(GetDesktopWindow(), vLocalDirectory, CSIDL_LOCAL_APPDATA, FALSE))
 		{
 			x_string_replace_wchar_t(vLocalDirectory, L'\\', L'/');

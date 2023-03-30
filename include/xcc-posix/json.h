@@ -46,13 +46,13 @@ _XPOSIXAPI_ x_json_t __xcall__ x_json_clone(x_json_t _Object);
 _XPOSIXAPI_ x_json_t __xcall__ x_json_new_null();
 
 // Create an object of type boolean
-_XPOSIXAPI_ x_json_t __xcall__ x_json_new_boolean(x_bool_t _Value);
+_XPOSIXAPI_ x_json_t __xcall__ x_json_new_boolean(bool _Value);
 
 // Create an object of type number
-_XPOSIXAPI_ x_json_t __xcall__ x_json_new_number(x_llong_t _Value);
+_XPOSIXAPI_ x_json_t __xcall__ x_json_new_number(x_int64_t _Value);
 
 // Create an object of type number
-_XPOSIXAPI_ x_json_t __xcall__ x_json_new_double(x_double_t _Value);
+_XPOSIXAPI_ x_json_t __xcall__ x_json_new_double(double _Value);
 
 // Create an object of type string
 _XPOSIXAPI_ x_json_t __xcall__ x_json_new_string(const char* _Value);
@@ -109,13 +109,13 @@ _XPOSIXAPI_ bool __xcall__ x_json_is_object(x_json_t _Object);
 _XPOSIXAPI_ bool __xcall__ x_json_as_boolean(x_json_t _Object);
 
 // Convert the value of the object to llong
-_XPOSIXAPI_ x_llong_t __xcall__ x_json_as_llong(x_json_t _Object);
+_XPOSIXAPI_ x_int64_t __xcall__ x_json_as_llong(x_json_t _Object);
 
 // Convert the value of the object to ullong
-_XPOSIXAPI_ x_ullong_t __xcall__ x_json_as_ullong(x_json_t _Object);
+_XPOSIXAPI_ x_uint64_t __xcall__ x_json_as_ullong(x_json_t _Object);
 
 // Convert the value of the object to double
-_XPOSIXAPI_ x_double_t __xcall__ x_json_as_double(x_json_t _Object);
+_XPOSIXAPI_ double __xcall__ x_json_as_double(x_json_t _Object);
 
 // Convert the value of the object to string
 _XPOSIXAPI_ const char* __xcall__ x_json_as_string(x_json_t _Object);

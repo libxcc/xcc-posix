@@ -180,22 +180,6 @@ typedef struct __dirstream
 
 
 // X-Series type definition : Basic types
-typedef		bool				x_bool_t;
-typedef		char				x_char_t;
-typedef		unsigned char			x_uchar_t;
-typedef		short				x_short_t;
-typedef		unsigned short			x_ushort_t;
-typedef		int				x_int_t;
-typedef		unsigned int			x_uint_t;
-typedef		long				x_long_t;
-typedef		unsigned long			x_ulong_t;
-typedef		long long			x_llong_t;
-typedef		unsigned long long		x_ullong_t;
-typedef		float				x_float_t;
-typedef		double				x_double_t;
-typedef		double				x_real_t;
-typedef		long double			x_ldouble_t;
-
 typedef		char				x_int8_t;
 typedef		unsigned char			x_uint8_t;
 typedef		short				x_int16_t;
