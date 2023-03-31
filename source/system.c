@@ -49,14 +49,11 @@ _XPOSIXAPI_ int __xcall__ x_posix_system(const char* _Command)
 _XPOSIXAPI_ int __xcall__ x_posix_pause(void)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
-	x_posix_system("pause");
-	return -1;
+	return x_posix_system("pause");
 #else
 	return pause();
 #endif
 }
-
-
 
 
 
@@ -80,8 +77,6 @@ _XPOSIXAPI_ int __xcall__ x_posix_wsystem(const wchar_t* _Command)
 	return vStatus;
 #endif
 }
-
-
 
 
 
@@ -185,8 +180,6 @@ _XPOSIXAPI_ void __xcall__ x_posix_exit(int _Status)
 
 
 
-
-
 // posix : getenv
 _XPOSIXAPI_ char* __xcall__ x_posix_getenv(const char* _Name)
 {
@@ -258,8 +251,6 @@ _XPOSIXAPI_ int __xcall__ x_posix_unsetenv(const char* _Name)
 	return unsetenv(_Name);
 #endif
 }
-
-
 
 
 
@@ -346,8 +337,6 @@ _XPOSIXAPI_ int __xcall__ x_system_get_last_error(void)
 
 
 
-
-
 // Get operating system bits
 _XPOSIXAPI_ size_t __xcall__ x_system_os_bits(void)
 {
@@ -397,8 +386,6 @@ _XPOSIXAPI_ size_t __xcall__ x_system_os_bits(void)
 
 	return _static_system_os_bits;
 }
-
-
 
 
 
@@ -545,8 +532,6 @@ _XPOSIXAPI_ size_t __xcall__ x_system_cpu_cache_line_size(void)
 
 	return _static_system_cpu_cache_line_size;
 }
-
-
 
 
 

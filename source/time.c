@@ -85,8 +85,6 @@ _XPOSIXAPI_ unsigned int __xcall__ x_posix_usleep(unsigned int _Microseconds)
 
 
 
-
-
 // Gets the total number of second of the current system time
 _XPOSIXAPI_ x_time_type __xcall__ x_time_system_second()
 {
@@ -143,8 +141,6 @@ _XPOSIXAPI_ x_time_type __xcall__ x_time_system_microsecond()
 #endif
 	return vMicrosecond;
 }
-
-
 
 
 

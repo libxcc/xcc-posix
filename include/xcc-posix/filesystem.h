@@ -230,12 +230,15 @@ _XPOSIXAPI_ unsigned long long __xcall__ x_posix_fsize(const char* _Filename);
 
 
 // posix : opendir
+XCC_DEPRECATE_OBSOLETE(x_fs_find_first)
 _XPOSIXAPI_ DIR* __xcall__ x_posix_opendir(const char* _Name);
 
 // posix : readdir
+XCC_DEPRECATE_OBSOLETE(x_fs_find_next)
 _XPOSIXAPI_ struct dirent* __xcall__ x_posix_readdir(DIR* _Stream);
 
 // posix : closedir
+XCC_DEPRECATE_OBSOLETE(x_fs_find_close)
 _XPOSIXAPI_ int __xcall__ x_posix_closedir(DIR* _Stream);
 
 
