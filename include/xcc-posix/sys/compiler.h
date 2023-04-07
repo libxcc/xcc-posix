@@ -76,15 +76,15 @@
 
 // X-Series cxx compatible export packaging
 #if defined(__cplusplus)
+#define 		XCC_CXX_EXTERN_CC					extern "C"
 #define 		XCC_CXX_EXTERN_BEGIN					extern "C" {
-#else
-#define 		XCC_CXX_EXTERN_BEGIN
-#endif
-#if defined(__cplusplus)
 #define 		XCC_CXX_EXTERN_END					}
 #else
+#define 		XCC_CXX_EXTERN_CC
+#define 		XCC_CXX_EXTERN_BEGIN
 #define 		XCC_CXX_EXTERN_END
 #endif
+
 
 
 #endif
