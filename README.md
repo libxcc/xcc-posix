@@ -2,15 +2,16 @@
 
 [![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 
-*A cross-platform C language wrapper Library*
+*A cross-platform C language wrapper library*
 
 
 
 ## Explain
-This project is mainly used to resolve the differences in function names and types under different systems.
-Solve some functions that are not provided due to platform differences, and add easy-to-call versions of some functions.
-This project library is the basis of the pure C language of the X-Series.
+By encapsulating the POSIX interface, a cross-platform call interface is provided.
 
+At the same time, it provides convenient operation methods for some operations.
+
+The project is the C language Api support library of the XCC series.
 
 
 
@@ -69,3 +70,5 @@ sudo make install
 
 This library is licensed under the [GNU Lesser General Public License v2.1](https://www.gnu.org/licenses/lgpl-2.1.en.html),
 also included in the repository in the `LICENSE` file.
+
+README Updated on: 2023-04-10
