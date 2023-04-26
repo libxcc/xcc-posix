@@ -40,8 +40,6 @@
 
 
 
-
-
 // Target platform bits
 #if defined(__x86_64__) || defined(__amd64__) || defined(_WIN64) || defined(__aarch64__)
 #define 		XCC_PLATFORM_BIT_64			(1)

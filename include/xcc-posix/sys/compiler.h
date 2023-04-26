@@ -22,7 +22,6 @@
 #define 		XCC_COMPILER_GNUC			(1)
 #endif
 
-
 // Check whether the compiler supports
 #if !defined(XCC_COMPILER_MSVC) && !defined(XCC_COMPILER_GNUC) && !defined(XCC_COMPILER_CLANG)
 #error This compiler is not supported yet
@@ -30,7 +29,7 @@
 
 
 
-// Compiler attribute: export and import
+// Compiler attribute: api
 #if defined(XCC_COMPILER_MSVC)
 #define			XCC_COMPILER_API_EXP					__declspec(dllexport)
 #define			XCC_COMPILER_API_IMP					__declspec(dllimport)
@@ -69,7 +68,7 @@
 #if defined(XCC_COMPILER_GNUC) || defined(XCC_COMPILER_CLANG)
 #define 		XCC_COMPILER_ATTRIBUTE_FORMAT(func,m,n)			__attribute__((format(func,m,n)))
 #else
-#define 		XCC_COMPILER_ATTRIBUTE_FORMAT
+#define 		XCC_COMPILER_ATTRIBUTE_FORMAT(func,m,n)
 #endif
 
 
