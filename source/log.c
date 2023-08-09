@@ -5,6 +5,7 @@
 #include <xcc-posix/string.h>
 #include <xcc-posix/stream.h>
 #include <xcc-posix/application.h>
+#include <xcc-posix/mutex.h>
 #include <stdarg.h>
 #if defined(XCC_SYSTEM_ANDROID)
 #include <android/log.h>
@@ -17,6 +18,8 @@ static x_log_level_t		_global_log_level = XLOG_LEVEL_VERBOSE;
 static xcc_log_printf_cb_t	_global_log_printf = NULL;
 static FILE*			_global_log_stream = NULL;
 static bool			_global_log_fflush = false;
+static bool			_global_log_lock = false;
+static x_mutex_t		_global_log_mutex;
 
 
 
@@ -147,7 +150,42 @@ static int __xcall__ x_log_printf_string(x_log_level_t _Level, const char* _TAG,
 	return vSync;
 }
 
+// 日志锁包装器
+static int __xcall__ x_log_printf_lock(x_log_level_t _Level, const char* _TAG, const char* _Message)
+{
+	int 		vSync = 0;
+	if(_global_log_lock)
+	{
+		x_mutex_lock(&_global_log_mutex);
+		vSync = x_log_printf_string(_Level, _TAG, _Message);
+		x_mutex_unlock(&_global_log_mutex);
+	}
+	else
+	{
+		vSync = x_log_printf_string(_Level, _TAG, _Message);
+	}
+	return vSync;
+}
 
+
+
+/// 设置启用日志锁
+/// \param _Enable true为启用，false为不启用
+_XPOSIXAPI_ void __xcall__ x_log_set_enable_lock(bool _Enable)
+{
+	// 记录锁是否初始化的状态
+	static bool	static_lock_init = false;
+
+	// 检查是否要初始化锁
+	if(false == static_lock_init && _Enable)
+	{
+		x_mutex_init(&_global_log_mutex);
+		static_lock_init = true;
+	}
+
+	// 更新状态
+	_global_log_lock = _Enable;
+}
 
 /// Set log print level
 _XPOSIXAPI_ void __xcall__ x_log_set_level(x_log_level_t _Level)
@@ -217,7 +255,7 @@ _XPOSIXAPI_ int __xcall__ x_log_vprintf(x_log_level_t _Level, const char* _TAG, 
 
 	if(vLogString)
 	{
-		vSync = x_log_printf_string(_Level, _TAG ? _TAG : "null", vLogString);
+		vSync = x_log_printf_lock(_Level, _TAG ? _TAG : "null", vLogString);
 		x_posix_free(vLogString);
 	}
 	return vSync;

@@ -21,7 +21,7 @@ typedef				pthread_t			x_thread_t;
 #else
 #define X_THREAD_INVALID_HANDLE					((x_thread_t)(NULL))
 #endif
-typedef void(__xcall__ *x_thread_function_t)(void* _Param);
+typedef void(__xcall__ *x_thread_func_t)(void* _Param);
 
 
 
@@ -30,6 +30,9 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_gettid(void);
 
 
 
+// Thread: 设置线程名称
+_XPOSIXAPI_ int __xcall__ x_thread_set_name(const char* _ThreadName);
+
 
 
 /// Create a thread
@@ -37,7 +40,7 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_gettid(void);
 /// \param _Param : A pointer to a variable to be passed to the thread.
 /// \return : If the function succeeds, the return value is a handle to the new thread.
 /// \return : If the function fails, the return value is NULL.
-_XPOSIXAPI_ x_thread_t __xcall__ x_thread_create(x_thread_function_t _Address, void* _Param);
+_XPOSIXAPI_ x_thread_t __xcall__ x_thread_create(x_thread_func_t _Address, void* _Param);
 
 /// It is separated from the thread. After the thread ends, the resources are automatically recycled.
 /// \param _Thread : Thread handle to detach

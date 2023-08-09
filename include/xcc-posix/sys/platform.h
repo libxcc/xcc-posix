@@ -13,7 +13,7 @@
 #endif
 
 // X-Series Platform Definition : Linux
-#if defined (__linux__) || defined (_LINUX_)
+#if defined (__linux__) || defined (_LINUX_) || defined (__unix__)
 #define			XCC_SYSTEM_LINUX			(1)
 #endif
 
@@ -31,6 +31,7 @@
 #if defined (__arm__) || defined (__ARM_ARCH)
 #define 		XCC_SYSTEM_ARM				(1)
 #endif
+
 
 
 // Check if the OS is supported

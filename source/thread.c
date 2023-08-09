@@ -16,7 +16,6 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_gettid(void)
 	return (pid_t)GetCurrentThreadId();
 #endif
 #if defined(XCC_SYSTEM_LINUX)
-	// return gettid();
 	return (pid_t)syscall(SYS_gettid);
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
@@ -28,10 +27,45 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_gettid(void)
 
 
 
+// Thread: 设置线程名称
+_XPOSIXAPI_ int __xcall__ x_thread_set_name(const char* _ThreadName)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	const DWORD MS_VC_EXCEPTION=0x406D1388;
+#pragma pack(push,8)
+	typedef struct tagTHREAD_NAME_INFO
+	{
+		DWORD dwType; // Must be 0x1000.
+		LPCSTR szName; // Pointer to name (in user addr space).
+		DWORD dwThreadID; // Thread ID (-1=caller thread).
+		DWORD dwFlags; // Reserved for future use, must be zero.
+	}THREAD_NAME_INFO;
+#pragma pack(pop)
+
+	THREAD_NAME_INFO info;
+	info.dwType = 0x1000;
+	info.szName = _ThreadName;
+	info.dwThreadID = GetCurrentThreadId();
+	info.dwFlags = 0;
+
+	__try
+	{
+		RaiseException( MS_VC_EXCEPTION, 0, sizeof(info)/sizeof(ULONG_PTR), (ULONG_PTR*)&info );
+	}
+	__except(EXCEPTION_CONTINUE_EXECUTION)
+	{
+		return (int)GetLastError();
+	}
+	return 0;
+#else
+	return -1;
+#endif
+}
+
 
 
 /// Create a thread
-_XPOSIXAPI_ x_thread_t __xcall__ x_thread_create(x_thread_function_t _Address, void* _Param)
+_XPOSIXAPI_ x_thread_t __xcall__ x_thread_create(x_thread_func_t _Address, void* _Param)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
 	return CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)_Address, _Param, 0, 0);

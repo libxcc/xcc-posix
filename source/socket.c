@@ -289,7 +289,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_is_readable(x_socket_t _Socket, unsigned int 
 	fd_set		vFDS_Except;
 	struct timeval	vTimeout;
 	vTimeout.tv_sec = (long)(_Timeout / 1000);
-	vTimeout.tv_usec = (long) ((_Timeout - (vTimeout.tv_sec * 1000)) * 1000);
+	vTimeout.tv_usec = (long) ((_Timeout % 1000) * 1000);
 
 	FD_ZERO(&vFDS_Read);
 	FD_ZERO(&vFDS_Except);
@@ -319,7 +319,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_is_writable(x_socket_t _Socket, unsigned int 
 	fd_set		vFDS_Except;
 	struct timeval	vTimeout;
 	vTimeout.tv_sec = (long)(_Timeout / 1000);
-	vTimeout.tv_usec = (long) ((_Timeout - (vTimeout.tv_sec * 1000)) * 1000);
+	vTimeout.tv_usec = (long) ((_Timeout % 1000) * 1000);
 
 	FD_ZERO(&vFDS_Write);
 	FD_ZERO(&vFDS_Except);
@@ -350,7 +350,7 @@ _XPOSIXAPI_ bool __xcall__ x_socket_select_status(x_socket_t _Socket, bool* _Rea
 	fd_set		vFDS_Except;
 	struct timeval	vTimeout;
 	vTimeout.tv_sec = (long)(_Timeout / 1000);
-	vTimeout.tv_usec = (long) ((_Timeout - (vTimeout.tv_sec * 1000)) * 1000);
+	vTimeout.tv_usec = (long) ((_Timeout % 1000) * 1000);
 
 	if(_Readable)
 	{
