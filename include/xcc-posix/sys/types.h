@@ -90,6 +90,7 @@ typedef			int			pid_t;
 // X-Series type definition : HANDLE
 #if !defined(XCC_SYSTEM_WINDOWS)
 typedef 		void*			HANDLE;
+#define			INVALID_HANDLE_VALUE	((HANDLE)(size_t)-1)
 #endif
 #define 		X_INVALID_HANDLE	((HANDLE)(-1))
 
