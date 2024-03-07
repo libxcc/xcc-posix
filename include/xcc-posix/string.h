@@ -231,11 +231,17 @@ _XPOSIXAPI_ const wchar_t* __xcall__ x_string_replace_wchar_t(wchar_t* _String, 
 
 
 
-/// Request the appropriate memory format string according to vsnprintf
-/// \param _Format : C string that contains a format string that follows the same specifications as format in printf (see printf for details).
-/// \param ... : Depending on the format string, the function may expect a sequence of additional arguments
-/// \return : The formatted string pointer is returned if successful, and null if failed. Need to call x_posix_free() release
+/// 根据vsnprintf请求合适的内存格式字符串
+/// \param _Format : 包含格式字符串的 C 字符串，该格式字符串遵循与 printf 中的格式相同的规范（有关详细信息，请参阅 printf）。
+/// \param ... : 根据格式字符串，该函数可能需要一系列附加参数
+/// \return : 如果成功则返回格式化的字符串指针，如果失败则返回null。 需要调用x_posix_free()释放
 _XPOSIXAPI_ char* __xcall__ x_string_format(const char* _Format, ...);
+
+/// 根据vsnprintf请求合适的内存格式字符串
+/// \param _Format : 包含格式字符串的 C 字符串，该格式字符串遵循与 printf 中的格式相同的规范（有关详细信息，请参阅 printf）。
+/// \param _ArgList : 参数列表
+/// \return : 如果成功则返回格式化的字符串指针，如果失败则返回null。 需要调用x_posix_free()释放
+_XPOSIXAPI_ char* __xcall__ x_string_vformat(const char* _Format, va_list _ArgList);
 
 
 

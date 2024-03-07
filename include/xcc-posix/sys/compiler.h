@@ -9,17 +9,17 @@
 
 // Compiler : MSVC
 #if defined(_MSC_VER)
-#define 		XCC_COMPILER_MSVC			(1)
+#define 		XCC_COMPILER_MSVC					(1)
 #endif
 
 // Compiler : CLANG
 #if defined(__clang__)
-#define 		XCC_COMPILER_CLANG			(1)
+#define 		XCC_COMPILER_CLANG					(1)
 #endif
 
 // Compiler : GNUC
 #if defined(__GNUC__)
-#define 		XCC_COMPILER_GNUC			(1)
+#define 		XCC_COMPILER_GNUC					(1)
 #endif
 
 // Check whether the compiler supports

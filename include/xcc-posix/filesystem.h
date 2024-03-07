@@ -123,6 +123,9 @@ _XPOSIXAPI_ int __xcall__ x_posix_unlink(const char* _FileName);
 // posix : tmpfile
 _XPOSIXAPI_ FILE* __xcall__ x_posix_tmpfile(void);
 
+// posix : truncate
+_XPOSIXAPI_ int __xcall__ x_posix_truncate(const char* _Filename, x_int64_t _Size);
+
 
 
 // posix : waccess

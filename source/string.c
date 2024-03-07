@@ -19,8 +19,6 @@ _XPOSIXAPI_ int __xcall__ x_posix_tolower(int _C)
 
 
 
-
-
 // posix : towupper
 _XPOSIXAPI_ wchar_t __xcall__ x_posix_towupper(wchar_t _C)
 {
@@ -32,8 +30,6 @@ _XPOSIXAPI_ wchar_t __xcall__ x_posix_towlower(wchar_t _C)
 {
 	return towlower(_C);
 }
-
-
 
 
 
@@ -374,8 +370,6 @@ _XPOSIXAPI_ char* __xcall__ x_posix_strrev(char* _String)
 
 
 
-
-
 // posix : wcslen
 _XPOSIXAPI_ size_t __xcall__ x_posix_wcslen(const wchar_t* _String)
 {
@@ -644,8 +638,6 @@ _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsrev(wchar_t* _String)
 
 
 
-
-
 // posix : strutow
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_strutow(const char* _UTF8)
 {
@@ -755,8 +747,6 @@ _XPOSIXAPI_ char* __xcall__ x_posix_strwtoa(const wchar_t* _UNICODE)
 
 
 
-
-
 // posix : atof
 _XPOSIXAPI_ double __xcall__ x_posix_atof(const char* _String)
 {
@@ -822,8 +812,6 @@ _XPOSIXAPI_ unsigned long long __xcall__ x_posix_strtoull(const char* _String, c
 {
 	return strtoull(_String, _EndPtr, _Radix);
 }
-
-
 
 
 
@@ -897,24 +885,30 @@ _XPOSIXAPI_ const wchar_t* __xcall__ x_string_replace_wchar_t(wchar_t* _String, 
 
 
 
-
-
-/// Request the appropriate memory format string according to vsnprintf
+/// 根据vsnprintf请求合适的内存格式字符串
 _XPOSIXAPI_ char* __xcall__ x_string_format(const char* _Format, ...)
 {
+	va_list		vArgs;
+	va_start(vArgs, _Format);
+	char*		vString = x_string_vformat(_Format, vArgs);
+	va_end(vArgs);
+	return vString;
+}
+
+/// 根据vsnprintf请求合适的内存格式字符串
+_XPOSIXAPI_ char* __xcall__ x_string_vformat(const char* _Format, va_list _ArgList)
+{
 	char*		vString = NULL;
-	va_list		vArgs1;
-	va_list		vArgs2;
-	va_start(vArgs1, _Format);
-	va_copy(vArgs2, vArgs1);
-	int		vSize = vsnprintf(NULL, 0, _Format, vArgs1);
+	va_list		vArgs;
+	va_copy(vArgs, _ArgList);
+	int		vSize = vsnprintf(NULL, 0, _Format, _ArgList);
 	if(vSize > 0)
 	{
 		vString = x_posix_malloc(vSize + XCC_STDIO_VSNPRINTF_EXTRA);
 		if(vString)
 		{
 			x_posix_memset(vString, 0, vSize + XCC_STDIO_VSNPRINTF_EXTRA);
-			vsnprintf(vString, vSize + XCC_STDIO_VSNPRINTF_EXTRA, _Format, vArgs2);
+			vsnprintf(vString, vSize + XCC_STDIO_VSNPRINTF_EXTRA, _Format, vArgs);
 		}
 	}
 	else
@@ -922,7 +916,6 @@ _XPOSIXAPI_ char* __xcall__ x_string_format(const char* _Format, ...)
 		vString = (char*)x_posix_malloc(XCC_STDIO_VSNPRINTF_EXTRA);
 		x_posix_memset(vString, 0, XCC_STDIO_VSNPRINTF_EXTRA);
 	}
-	va_end(vArgs1);
-	va_end(vArgs2);
+	va_end(vArgs);
 	return vString;
 }

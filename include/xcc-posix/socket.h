@@ -36,6 +36,7 @@ typedef struct {
 #define	X_SOCKET_SHUT_BOTH	(2)
 
 
+
 // posix : gethostbyname
 _XPOSIXAPI_ struct hostent* __xcall__ x_socket_get_host_by_name(const char* _Name);
 
@@ -112,6 +113,9 @@ _XPOSIXAPI_ int __xcall__ x_socket_is_connected(x_socket_t _Socket, unsigned int
 
 // 检查套接字是否断开，已断开返回1，未断开返回0，异常返回-1。
 _XPOSIXAPI_ int __xcall__ x_socket_is_disconnected(x_socket_t _Socket, unsigned int _Timeout);
+
+// 检查套接字是否监听中，已监听返回1，未监听返回0，异常返回-1。
+_XPOSIXAPI_ int __xcall__ x_socket_is_listen(const char* _Address, x_uint16_t _Port, unsigned int _Timeout);
 
 // 检查socket是否可读，可读返回1，不可读返回0，异常返回-1。
 _XPOSIXAPI_ int __xcall__ x_socket_is_readable(x_socket_t _Socket, unsigned int _Timeout);

@@ -319,8 +319,6 @@ _XPOSIXAPI_ void __xcall__ x_posix_sync(void)
 
 
 
-
-
 // posix : access
 _XPOSIXAPI_ int __xcall__ x_posix_access(const char* _Path, int _Mode)
 {
@@ -553,7 +551,49 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_tmpfile(void)
 	return tmpfile();
 }
 
+// posix : truncate
+_XPOSIXAPI_ int __xcall__ x_posix_truncate(const char* _Filename, x_int64_t _Size)
+{
+#if defined(XCC_SYSTEM_WINDOWS)
+	wchar_t*	vFilenameW = x_posix_strutow(_Filename);
+	int 		vStatus = EINVAL;
+	HANDLE		vHandle = INVALID_HANDLE_VALUE;
+	LARGE_INTEGER	vFileSize;
 
+	if(vFilenameW)
+	{
+		vHandle = CreateFileW(vFilenameW, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if (INVALID_HANDLE_VALUE != vHandle)
+		{
+			vFileSize.QuadPart = _Size;
+			if (SetFilePointerEx(vHandle, vFileSize, NULL, FILE_BEGIN))
+			{
+				if (SetEndOfFile(vHandle))
+				{
+					vStatus = 0;
+				}
+			}
+			CloseHandle(vHandle);
+		}
+	}
+	if(vFilenameW)
+	{
+		x_posix_free(vFilenameW);
+	}
+	return vStatus;
+#else
+	FILE*		vHandle = fopen(_Filename, "ab+");
+	char		vSpaceByte[1];
+	x_posix_memset(vSpaceByte, 0, 1);
+	if(vHandle)
+	{
+		fwrite(vSpaceByte, 1, 1, vHandle);
+		fflush(vHandle);
+		fclose(vHandle);
+	}
+	return truncate(_Filename, _Size);
+#endif
+}
 
 
 
@@ -758,8 +798,6 @@ _XPOSIXAPI_ int __xcall__ x_posix_wunlink(const wchar_t* _FileName)
 
 
 
-
-
 // posix : fopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_fopen(const char* _Filename, const char* _Mode)
 {
@@ -821,8 +859,6 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_freopen(const char* _Filename, const char* _
 	return freopen(_Filename, _Mode, _Stream);
 #endif
 }
-
-
 
 
 
@@ -905,8 +941,6 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_wfreopen(const wchar_t* _Filename, const wch
 
 
 
-
-
 // posix : fileno
 _XPOSIXAPI_ int __xcall__ x_posix_fileno(FILE* _Stream)
 {
@@ -928,8 +962,10 @@ _XPOSIXAPI_ int64_t __xcall__ x_posix_fseek64(FILE* _Stream, int64_t _Offset, in
 {
 #if defined(XCC_SYSTEM_WINDOWS)
 	return _fseeki64(_Stream, _Offset, _Whence);
-#else
+#elif defined(XCC_SYSTEM_ANDROID)
 	return fseek(_Stream, _Offset, _Whence);
+#else
+	return fseeko(_Stream, _Offset, _Whence);
 #endif
 }
 
@@ -944,8 +980,10 @@ _XPOSIXAPI_ int64_t __xcall__ x_posix_ftell64(FILE* _Stream)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
 	return _ftelli64(_Stream);
-#else
+#elif defined(XCC_SYSTEM_ANDROID)
 	return ftell(_Stream);
+#else
+	return ftello(_Stream);
 #endif
 }
 
@@ -1030,8 +1068,6 @@ _XPOSIXAPI_ unsigned long long __xcall__ x_posix_fsize(const char* _Filename)
 	}
 	return 0;
 }
-
-
 
 
 

@@ -282,6 +282,91 @@ _XPOSIXAPI_ int __xcall__ x_socket_is_disconnected(x_socket_t _Socket, unsigned 
 	return vStatus;
 }
 
+// 检查套接字是否监听中，已监听返回1，未监听返回0，异常返回-1。
+_XPOSIXAPI_ int __xcall__ x_socket_is_listen(const char* _Address, x_uint16_t _Port, unsigned int _Timeout)
+{
+	if(_Address == NULL || _Port == 0)
+	{
+		return -1;
+	}
+
+	// 创建套接字
+	x_socket_t	vSocket = X_INVALID_SOCKET;
+	if(x_posix_strstr(_Address, ":"))
+	{
+		vSocket = x_socket_open(AF_INET6, SOCK_STREAM, 0);
+	}
+	else if(x_posix_strstr(_Address, "."))
+	{
+		vSocket = x_socket_open(AF_INET, SOCK_STREAM, 0);
+	}
+	else
+	{
+		return -1;
+	}
+	if(vSocket == X_INVALID_SOCKET)
+	{
+		return -1;
+	}
+
+	// 设置超时时间
+	struct timeval tv;
+	tv.tv_sec = _Timeout / 1000;
+	tv.tv_usec = (_Timeout % 1000) * 1000;
+	if (x_socket_set_opt(vSocket, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv)) < 0)
+	{
+		x_socket_close(vSocket);
+		return -1;
+	}
+	if (x_socket_set_opt(vSocket, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0)
+	{
+		x_socket_close(vSocket);
+		return -1;
+	}
+
+	// 连接到服务器
+	if(x_posix_strstr(_Address, ":"))
+	{
+		struct sockaddr_in6	vAddress;
+		vAddress.sin6_family = AF_INET6;
+		vAddress.sin6_port = htons(_Port);
+		if (inet_pton(AF_INET6, _Address, &(vAddress.sin6_addr)) <= 0)
+		{
+			x_socket_close(vSocket);
+			return -1;
+		}
+
+		// 连接到服务器
+		if (x_socket_connect(vSocket, (struct sockaddr*)&vAddress, sizeof(struct sockaddr_in6)) < 0)
+		{
+			x_socket_close(vSocket);
+			return 0;
+		}
+	}
+	else if(x_posix_strstr(_Address, "."))
+	{
+		struct sockaddr_in	vAddress;
+		vAddress.sin_family = AF_INET;
+		vAddress.sin_port = htons(_Port);
+		if (inet_pton(AF_INET, _Address, &(vAddress.sin_addr)) <= 0)
+		{
+			x_socket_close(vSocket);
+			return -1;
+		}
+
+		// 连接到服务器
+		if (x_socket_connect(vSocket, (struct sockaddr*)&vAddress, sizeof(struct sockaddr_in)) < 0)
+		{
+			x_socket_close(vSocket);
+			return 0;
+		}
+	}
+
+	// 释放资源
+	x_socket_close(vSocket);
+	return 1;
+}
+
 // 检查socket是否可读，可读返回1，不可读返回0，异常返回-1。
 _XPOSIXAPI_ int __xcall__ x_socket_is_readable(x_socket_t _Socket, unsigned int _Timeout)
 {
