@@ -63,7 +63,7 @@ _XPOSIXAPI_ int __xcall__ x_log_vprintf(x_log_level_t _Level, const char* _TAG, 
 
 
 
-// Log convenient call macro
+// 日志一些方便调用的宏
 #define			XLOG_VERBOSE(_TAG, _Format, ...)			x_log_printf(XLOG_LEVEL_VERBOSE, _TAG, _Format, ##__VA_ARGS__)
 #define			XLOG_DEBUG(_TAG, _Format, ...)				x_log_printf(XLOG_LEVEL_DEBUG, _TAG, _Format, ##__VA_ARGS__)
 #define			XLOG_INFO(_TAG, _Format, ...)				x_log_printf(XLOG_LEVEL_INFO, _TAG, _Format, ##__VA_ARGS__)
@@ -71,29 +71,35 @@ _XPOSIXAPI_ int __xcall__ x_log_vprintf(x_log_level_t _Level, const char* _TAG, 
 #define			XLOG_ERROR(_TAG, _Format, ...)				x_log_printf(XLOG_LEVEL_ERROR, _TAG, _Format, ##__VA_ARGS__)
 #define			XLOG_FATAL(_TAG, _Format, ...)				x_log_printf(XLOG_LEVEL_FATAL, _TAG, _Format, ##__VA_ARGS__)
 
-#define 		XCC_FUNC_V_ENTER					XLOG_VERBOSE(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_V_EXEC						XLOG_VERBOSE(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_V_LEAVE					XLOG_VERBOSE(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_V_ENTER					XLOG_VERBOSE(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_V_EXEC					XLOG_VERBOSE(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_V_LEAVE					XLOG_VERBOSE(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_V_PRINTF(_Format, ...)			XLOG_VERBOSE(nullptr, u8"[%s : %d] " _Format, __XFUNCTION__, __XLINE__, ##__VA_ARGS__)
 
-#define 		XCC_FUNC_D_ENTER					XLOG_DEBUG(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_D_EXEC						XLOG_DEBUG(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_D_LEAVE					XLOG_DEBUG(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_D_ENTER					XLOG_DEBUG(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_D_EXEC					XLOG_DEBUG(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_D_LEAVE					XLOG_DEBUG(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_D_PRINTF(_Format, ...)			XLOG_DEBUG(nullptr, u8"[%s : %d] " _Format, __XFUNCTION__, __XLINE__, ##__VA_ARGS__)
 
-#define 		XCC_FUNC_I_ENTER					XLOG_INFO(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_I_EXEC						XLOG_INFO(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_I_LEAVE					XLOG_INFO(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_I_ENTER					XLOG_INFO(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_I_EXEC					XLOG_INFO(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_I_LEAVE					XLOG_INFO(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_I_PRINTF(_Format, ...)			XLOG_INFO(nullptr, u8"[%s : %d] " _Format, __XFUNCTION__, __XLINE__, ##__VA_ARGS__)
 
-#define 		XCC_FUNC_W_ENTER					XLOG_WARNING(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_W_EXEC						XLOG_WARNING(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_W_LEAVE					XLOG_WARNING(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_W_ENTER					XLOG_WARNING(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_W_EXEC					XLOG_WARNING(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_W_LEAVE					XLOG_WARNING(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_W_PRINTF(_Format, ...)			XLOG_WARNING(nullptr, u8"[%s : %d] " _Format, __XFUNCTION__, __XLINE__, ##__VA_ARGS__)
 
-#define 		XCC_FUNC_E_ENTER					XLOG_ERROR(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_E_EXEC						XLOG_ERROR(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_E_LEAVE					XLOG_ERROR(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_E_ENTER					XLOG_ERROR(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_E_EXEC					XLOG_ERROR(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_E_LEAVE					XLOG_ERROR(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_E_PRINTF(_Format, ...)			XLOG_ERROR(nullptr, u8"[%s : %d] " _Format, __XFUNCTION__, __XLINE__, ##__VA_ARGS__)
 
-#define 		XCC_FUNC_F_ENTER					XLOG_FATAL(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_F_EXEC						XLOG_FATAL(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
-#define 		XCC_FUNC_F_LEAVE					XLOG_FATAL(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_F_ENTER					XLOG_FATAL(nullptr, u8"[%s : %d] <<<<<<<<<<", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_F_EXEC					XLOG_FATAL(nullptr, u8"[%s : %d] ----------", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_F_LEAVE					XLOG_FATAL(nullptr, u8"[%s : %d] >>>>>>>>>>", __XFUNCTION__, __XLINE__)
+#define 		XLOG_FUNC_F_PRINTF(_Format, ...)			XLOG_FATAL(nullptr, u8"[%s : %d] " _Format, __XFUNCTION__, __XLINE__, ##__VA_ARGS__)
 
 
 
