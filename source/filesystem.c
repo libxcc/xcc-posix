@@ -283,7 +283,7 @@ _XPOSIXAPI_ off_t __xcall__ x_posix_lseek(int _FileHandle, off_t _Offset, int _O
 _XPOSIXAPI_ ssize_t __xcall__ x_posix_read(int _FileHandle, void* _Buffer, size_t _Count)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
-	return _read(_FileHandle, _Buffer, _Count);
+	return _read(_FileHandle, _Buffer, (uint32_t)_Count);
 #else
 	return read(_FileHandle, _Buffer, _Count);
 #endif
@@ -293,7 +293,7 @@ _XPOSIXAPI_ ssize_t __xcall__ x_posix_read(int _FileHandle, void* _Buffer, size_
 _XPOSIXAPI_ ssize_t __xcall__ x_posix_write(int _FileHandle, const void* _Buffer, size_t _Count)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
-	return _write(_FileHandle, _Buffer, _Count);
+	return _write(_FileHandle, _Buffer, (uint32_t)_Count);
 #else
 	return write(_FileHandle, _Buffer, _Count);
 #endif
@@ -562,13 +562,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_truncate(const char* _Filename, x_int64_t _Siz
 
 	if(vFilenameW)
 	{
-		vHandle = CreateFileW(vFilenameW, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		if (INVALID_HANDLE_VALUE != vHandle)
+		vHandle = CreateFileW(vFilenameW, GENERIC_WRITE, 0, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if(INVALID_HANDLE_VALUE != vHandle)
 		{
 			vFileSize.QuadPart = _Size;
-			if (SetFilePointerEx(vHandle, vFileSize, NULL, FILE_BEGIN))
+			if(SetFilePointerEx(vHandle, vFileSize, NULL, FILE_BEGIN))
 			{
-				if (SetEndOfFile(vHandle))
+				if(SetEndOfFile(vHandle))
 				{
 					vStatus = 0;
 				}
@@ -582,14 +582,17 @@ _XPOSIXAPI_ int __xcall__ x_posix_truncate(const char* _Filename, x_int64_t _Siz
 	}
 	return vStatus;
 #else
-	FILE*		vHandle = fopen(_Filename, "ab+");
-	char		vSpaceByte[1];
-	x_posix_memset(vSpaceByte, 0, 1);
-	if(vHandle)
+	if(0 != access(_Filename, F_OK))
 	{
-		fwrite(vSpaceByte, 1, 1, vHandle);
-		fflush(vHandle);
-		fclose(vHandle);
+		FILE*		vHandle = fopen(_Filename, "ab+");
+		char		vSpaceByte[1];
+		x_posix_memset(vSpaceByte, 0, 1);
+		if(vHandle)
+		{
+			fwrite(vSpaceByte, 1, 1, vHandle);
+			fflush(vHandle);
+			fclose(vHandle);
+		}
 	}
 	return truncate(_Filename, _Size);
 #endif

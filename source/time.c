@@ -25,8 +25,6 @@ typedef struct XCC_TIME_HPT_CONTEXT
 
 
 
-
-
 // posix : srand
 _XPOSIXAPI_ void __xcall__ x_posix_srand(unsigned int _Seed)
 {
@@ -85,7 +83,7 @@ _XPOSIXAPI_ unsigned int __xcall__ x_posix_usleep(unsigned int _Microseconds)
 
 
 
-// Gets the total number of second of the current system time
+// 获取当前系统时间的总秒数
 _XPOSIXAPI_ x_time_type __xcall__ x_time_system_second()
 {
 	x_time_type		vSecond = 0;
@@ -101,7 +99,7 @@ _XPOSIXAPI_ x_time_type __xcall__ x_time_system_second()
 	return vSecond;
 }
 
-// Gets the total number of millisecond of the current system time
+// 获取当前系统时间的总毫秒数
 _XPOSIXAPI_ x_time_type __xcall__ x_time_system_millisecond()
 {
 	x_time_type		vMillisecond = 0;
@@ -118,7 +116,7 @@ _XPOSIXAPI_ x_time_type __xcall__ x_time_system_millisecond()
 	return vMillisecond;
 }
 
-// Gets the total number of microsecond of the current system time
+// 获取当前系统时间的总微秒数
 _XPOSIXAPI_ x_time_type __xcall__ x_time_system_microsecond()
 {
 	x_time_type		vMicrosecond = 0;

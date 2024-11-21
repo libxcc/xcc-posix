@@ -323,7 +323,7 @@ _XPOSIXAPI_ char* __xcall__ x_posix_strndup(const char* _String, size_t _Length)
 		return NULL;
 	}
 
-	char*		vMemory = x_posix_malloc(sizeof(char*) * (_Length + 1));
+	char*		vMemory = x_posix_malloc(sizeof(char) * (_Length + 1));
 	if(vMemory)
 	{
 		x_posix_strncpy(vMemory, _String, _Length);

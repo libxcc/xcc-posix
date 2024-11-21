@@ -36,7 +36,7 @@ _XPOSIXAPI_ int __xcall__ x_pipe_write(x_pipe_t _Handle, const void* _Bytes, x_s
 {
 #if defined(XCC_SYSTEM_WINDOWS)
 	DWORD 		vSyncSize;
-	if(WriteFile(_Handle, _Bytes, _Size, &vSyncSize, NULL))
+	if(WriteFile(_Handle, _Bytes, (DWORD)_Size, &vSyncSize, NULL))
 	{
 		return (int)vSyncSize;
 	}
@@ -51,7 +51,7 @@ _XPOSIXAPI_ int __xcall__ x_pipe_read(x_pipe_t _Handle, void* _Bytes, x_size_t _
 {
 #if defined(XCC_SYSTEM_WINDOWS)
 	DWORD 		vSyncSize;
-	if(ReadFile(_Handle, _Bytes, _Size, &vSyncSize, NULL))
+	if(ReadFile(_Handle, _Bytes, (DWORD)_Size, &vSyncSize, NULL))
 	{
 		return (int)vSyncSize;
 	}

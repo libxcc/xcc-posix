@@ -83,10 +83,10 @@ _XPOSIXAPI_ bool __xcall__ x_base64_decode(const unsigned char* _Memory, size_t 
 		return false;
 	}
 
-	unsigned int	vBuffer = 0;
+	uint32_t	vBuffer = 0;
 	int		vBits = 0;
 	int		vOffset = 0;
-	uint32_t 	vDecodeSize = ((_Length * 3) / 4) + 1;
+	uint32_t 	vDecodeSize = (((uint32_t)_Length * 3) / 4) + 1;
 	unsigned char*	vDecodeData = (unsigned char*)x_posix_malloc(vDecodeSize);
 
 	for(size_t vIndex = 0; vIndex < _Length && vDecodeData; ++vIndex)

@@ -27,18 +27,14 @@ _XPOSIXAPI_ unsigned int __xcall__ x_posix_usleep(unsigned int _Microseconds);
 
 
 
-
-
-// Gets the total number of second of the current system time
+// 获取当前系统时间的总秒数
 _XPOSIXAPI_ x_time_type __xcall__ x_time_system_second();
 
-// Gets the total number of millisecond of the current system time
+// 获取当前系统时间的总毫秒数
 _XPOSIXAPI_ x_time_type __xcall__ x_time_system_millisecond();
 
-// Gets the total number of microsecond of the current system time
+// 获取当前系统时间的总微秒数
 _XPOSIXAPI_ x_time_type __xcall__ x_time_system_microsecond();
-
-
 
 
 
