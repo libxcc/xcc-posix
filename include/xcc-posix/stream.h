@@ -7,55 +7,55 @@ XCC_CXX_EXTERN_BEGIN
 
 
 
-// posix : printf
+// posix - printf
 _XPOSIXAPI_ int __xcall__ x_posix_printf(const char* _Format, ...);
 
-// posix : vprintf
+// posix - vprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vprintf(const char* _Format, va_list _ArgList);
 
-// posix : sprintf
+// posix - sprintf
 _XPOSIXAPI_ int __xcall__ x_posix_sprintf(char* _Buffer, const char* _Format, ...);
 
-// posix : vsprintf
+// posix - vsprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vsprintf(char* _Buffer, const char* _Format, va_list _ArgList);
 
-// posix : snprintf
+// posix - snprintf
 _XPOSIXAPI_ int __xcall__ x_posix_snprintf(char* _Buffer, size_t _BufferCount, const char* _Format, ...);
 
-// posix : vsnprintf
+// posix - vsnprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vsnprintf(char* _Buffer, size_t _BufferCount, const char* _Format, va_list _ArgList);
 
-// posix : fprintf
+// posix - fprintf
 _XPOSIXAPI_ int __xcall__ x_posix_fprintf(FILE* _Stream, const char* _Format, ...);
 
-// posix : vfprintf
+// posix - vfprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vfprintf(FILE* _Stream, const char* _Format, va_list _ArgList);
 
-// posix : asprintf
+// posix - asprintf
 _XPOSIXAPI_ int __xcall__ x_posix_asprintf(char** _Buffer, const char* _Format, ...);
 
-// posix : vasprintf
+// posix - vasprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vasprintf(char** _Buffer, const char* _Format, va_list _ArgList);
 
-// posix : scanf
+// posix - scanf
 _XPOSIXAPI_ int __xcall__ x_posix_scanf(const char* _Format, ...);
 
-// posix : vscanf
+// posix - vscanf
 _XPOSIXAPI_ int __xcall__ x_posix_vscanf(const char* _Format, va_list _ArgList);
 
-// posix : sscanf
+// posix - sscanf
 _XPOSIXAPI_ int __xcall__ x_posix_sscanf(const char* _Buffer, const char* _Format, ...);
 
-// posix : vsscanf
+// posix - vsscanf
 _XPOSIXAPI_ int __xcall__ x_posix_vsscanf(const char* _Buffer, const char* _Format, va_list _ArgList);
 
-// posix : fscanf
+// posix - fscanf
 _XPOSIXAPI_ int __xcall__ x_posix_fscanf(FILE* _Stream, const char* _Format, ...);
 
-// posix : vfscanf
+// posix - vfscanf
 _XPOSIXAPI_ int __xcall__ x_posix_vfscanf(FILE* _Stream, const char* _Format, va_list _ArgList);
 
-// posix : fflush
+// posix - fflush
 _XPOSIXAPI_ int __xcall__ x_posix_fflush(FILE* _Stream);
 
 

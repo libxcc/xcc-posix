@@ -4,7 +4,7 @@
 
 
 
-// posix : printf
+// posix - printf
 _XPOSIXAPI_ int __xcall__ x_posix_printf(const char* _Format, ...)
 {
 	int 		vSync = 0;
@@ -16,13 +16,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_printf(const char* _Format, ...)
 	return vSync;
 }
 
-// posix : vprintf
+// posix - vprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vprintf(const char* _Format, va_list _ArgList)
 {
 	return vprintf(_Format, _ArgList);
 }
 
-// posix : sprintf
+// posix - sprintf
 _XPOSIXAPI_ int __xcall__ x_posix_sprintf(char* _Buffer, const char* _Format, ...)
 {
 	int 		vSync = 0;
@@ -34,13 +34,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_sprintf(char* _Buffer, const char* _Format, ..
 	return vSync;
 }
 
-// posix : vsprintf
+// posix - vsprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vsprintf(char* _Buffer, const char* _Format, va_list _ArgList)
 {
 	return vsprintf(_Buffer, _Format, _ArgList);
 }
 
-// posix : snprintf
+// posix - snprintf
 _XPOSIXAPI_ int __xcall__ x_posix_snprintf(char* _Buffer, size_t _BufferCount, const char* _Format, ...)
 {
 	int 		vSync = 0;
@@ -52,13 +52,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_snprintf(char* _Buffer, size_t _BufferCount, c
 	return vSync;
 }
 
-// posix : vsnprintf
+// posix - vsnprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vsnprintf(char* _Buffer, size_t _BufferCount, const char* _Format, va_list _ArgList)
 {
 	return vsnprintf(_Buffer, _BufferCount, _Format, _ArgList);
 }
 
-// posix : fprintf
+// posix - fprintf
 _XPOSIXAPI_ int __xcall__ x_posix_fprintf(FILE* _Stream, const char* _Format, ...)
 {
 	int 		vSync = 0;
@@ -70,13 +70,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_fprintf(FILE* _Stream, const char* _Format, ..
 	return vSync;
 }
 
-// posix : vfprintf
+// posix - vfprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vfprintf(FILE* _Stream, const char* _Format, va_list _ArgList)
 {
 	return vfprintf(_Stream, _Format, _ArgList);
 }
 
-// posix : asprintf
+// posix - asprintf
 _XPOSIXAPI_ int __xcall__ x_posix_asprintf(char** _Buffer, const char* _Format, ...)
 {
 	int		vStatus = 0;
@@ -88,7 +88,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_asprintf(char** _Buffer, const char* _Format, 
 	return vStatus;
 }
 
-// posix : vasprintf
+// posix - vasprintf
 _XPOSIXAPI_ int __xcall__ x_posix_vasprintf(char** _Buffer, const char* _Format, va_list _ArgList)
 {
 	int		vStatus = 0;
@@ -114,7 +114,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_vasprintf(char** _Buffer, const char* _Format,
 	return vStatus;
 }
 
-// posix : scanf
+// posix - scanf
 _XPOSIXAPI_ int __xcall__ x_posix_scanf(const char* _Format, ...)
 {
 	int 		vSync = 0;
@@ -126,13 +126,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_scanf(const char* _Format, ...)
 	return vSync;
 }
 
-// posix : vscanf
+// posix - vscanf
 _XPOSIXAPI_ int __xcall__ x_posix_vscanf(const char* _Format, va_list _ArgList)
 {
 	return vscanf(_Format, _ArgList);
 }
 
-// posix : sscanf
+// posix - sscanf
 _XPOSIXAPI_ int __xcall__ x_posix_sscanf(const char* _Buffer, const char* _Format, ...)
 {
 	int 		vSync = 0;
@@ -144,13 +144,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_sscanf(const char* _Buffer, const char* _Forma
 	return vSync;
 }
 
-// posix : vsscanf
+// posix - vsscanf
 _XPOSIXAPI_ int __xcall__ x_posix_vsscanf(const char* _Buffer, const char* _Format, va_list _ArgList)
 {
 	return vsscanf(_Buffer, _Format, _ArgList);
 }
 
-// posix : fscanf
+// posix - fscanf
 _XPOSIXAPI_ int __xcall__ x_posix_fscanf(FILE* _Stream, const char* _Format, ...)
 {
 	int 		vSync = 0;
@@ -162,13 +162,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_fscanf(FILE* _Stream, const char* _Format, ...
 	return vSync;
 }
 
-// posix : vfscanf
+// posix - vfscanf
 _XPOSIXAPI_ int __xcall__ x_posix_vfscanf(FILE* _Stream, const char* _Format, va_list _ArgList)
 {
 	return vfscanf(_Stream, _Format, _ArgList);
 }
 
-// posix : fflush
+// posix - fflush
 _XPOSIXAPI_ int __xcall__ x_posix_fflush(FILE* _Stream)
 {
 	return fflush(_Stream);

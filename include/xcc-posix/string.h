@@ -7,210 +7,210 @@ XCC_CXX_EXTERN_BEGIN
 
 
 
-// posix : toupper
+// posix - toupper
 _XPOSIXAPI_ int __xcall__ x_posix_toupper(int _C);
 
-// posix : tolower
+// posix - tolower
 _XPOSIXAPI_ int __xcall__ x_posix_tolower(int _C);
 
 
 
 
 
-// posix : towupper
+// posix - towupper
 _XPOSIXAPI_ wchar_t __xcall__ x_posix_towupper(wchar_t _C);
 
-// posix : towlower
+// posix - towlower
 _XPOSIXAPI_ wchar_t __xcall__ x_posix_towlower(wchar_t _C);
 
 
 
 
 
-// posix : strlen
+// posix - strlen
 _XPOSIXAPI_ size_t __xcall__ x_posix_strlen(const char* _String);
 
-// posix : strcmp
+// posix - strcmp
 _XPOSIXAPI_ int __xcall__ x_posix_strcmp(const char* _Str1, const char* _Str2);
 
-// posix : stricmp
+// posix - stricmp
 _XPOSIXAPI_ int __xcall__ x_posix_stricmp(const char* _Str1, const char* _Str2);
 
-// posix : strcasecmp
+// posix - strcasecmp
 _XPOSIXAPI_ int __xcall__ x_posix_strcasecmp(const char* _Str1, const char* _Str2);
 
-// posix : strncmp
+// posix - strncmp
 _XPOSIXAPI_ int __xcall__ x_posix_strncmp(const char* _Str1, const char* _Str2, size_t _Length);
 
-// posix : strnicmp
+// posix - strnicmp
 _XPOSIXAPI_ int __xcall__ x_posix_strnicmp(const char* _Str1, const char* _Str2, size_t _Length);
 
-// posix : strchr
+// posix - strchr
 _XPOSIXAPI_ const char* __xcall__ x_posix_strchr(const char* _Str, int _Ch);
 
-// posix : strichr
+// posix - strichr
 _XPOSIXAPI_ const char* __xcall__ x_posix_strichr(const char* _Str, int _Ch);
 
-// posix : strrchr
+// posix - strrchr
 _XPOSIXAPI_ const char* __xcall__ x_posix_strrchr(const char* _Str, int _Ch);
 
-// posix : strirchr
+// posix - strirchr
 _XPOSIXAPI_ const char* __xcall__ x_posix_strirchr(const char* _Str, int _Ch);
 
-// posix : strstr
+// posix - strstr
 _XPOSIXAPI_ const char* __xcall__ x_posix_strstr(const char* _Str, const char* _SubStr);
 
-// posix : stristr
+// posix - stristr
 _XPOSIXAPI_ const char* __xcall__ x_posix_stristr(const char* _Str, const char* _SubStr);
 
-// posix : strrstr
+// posix - strrstr
 _XPOSIXAPI_ const char* __xcall__ x_posix_strrstr(const char* _Str, const char* _SubStr);
 
-// posix : strirstr
+// posix - strirstr
 _XPOSIXAPI_ const char* __xcall__ x_posix_strirstr(const char* _Str, const char* _SubStr);
 
-// posix : strcpy
+// posix - strcpy
 _XPOSIXAPI_ char* __xcall__ x_posix_strcpy(char* _Dst, const char* _Source);
 
-// posix : strncpy
+// posix - strncpy
 _XPOSIXAPI_ char* __xcall__ x_posix_strncpy(char* _Dst, const char* _Source, size_t _Length);
 
-// posix : strcat
+// posix - strcat
 _XPOSIXAPI_ char* __xcall__ x_posix_strcat(char* _Str1, const char* _Str2);
 
-// posix : strncat
+// posix - strncat
 _XPOSIXAPI_ char* __xcall__ x_posix_strncat(char* _Str1, const char* _Str2, size_t _Length);
 
-// posix : strdup
+// posix - strdup
 _XPOSIXAPI_ char* __xcall__ x_posix_strdup(const char* _String);
 
-// posix : strndup
+// posix - strndup
 _XPOSIXAPI_ char* __xcall__ x_posix_strndup(const char* _String, size_t _Length);
 
-// posix : strupr
+// posix - strupr
 _XPOSIXAPI_ char* __xcall__ x_posix_strupr(char* _String);
 
-// posix : strlwr
+// posix - strlwr
 _XPOSIXAPI_ char* __xcall__ x_posix_strlwr(char* _String);
 
-// posix : strrev
+// posix - strrev
 _XPOSIXAPI_ char* __xcall__ x_posix_strrev(char* _String);
 
 
 
 
 
-// posix : wcslen
+// posix - wcslen
 _XPOSIXAPI_ size_t __xcall__ x_posix_wcslen(const wchar_t* _String);
 
-// posix : wcscmp
+// posix - wcscmp
 _XPOSIXAPI_ int __xcall__ x_posix_wcscmp(const wchar_t* _Str1, const wchar_t* _Str2);
 
-// posix : wcsicmp
+// posix - wcsicmp
 _XPOSIXAPI_ int __xcall__ x_posix_wcsicmp(const wchar_t* _Str1, const wchar_t* _Str2);
 
-// posix : wcscasecmp
+// posix - wcscasecmp
 _XPOSIXAPI_ int __xcall__ x_posix_wcscasecmp(const wchar_t* _Str1, const wchar_t* _Str2);
 
-// posix : wcsncmp
+// posix - wcsncmp
 _XPOSIXAPI_ int __xcall__ x_posix_wcsncmp(const wchar_t* _Str1, const wchar_t* _Str2, size_t _Length);
 
-// posix : wcschr
+// posix - wcschr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wcschr(const wchar_t* _Str, wchar_t _Ch);
 
-// posix : wcsichr
+// posix - wcsichr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wcsichr(const wchar_t* _Str, wchar_t _Ch);
 
-// posix : wcsrchr
+// posix - wcsrchr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wcsrchr(const wchar_t* _Str, wchar_t _Ch);
 
-// posix : wcsirchr
+// posix - wcsirchr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wcsirchr(const wchar_t* _Str, wchar_t _Ch);
 
-// posix : wcsstr
+// posix - wcsstr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wcsstr(const wchar_t* _Str, const wchar_t* _SubStr);
 
-// posix : wcsistr
+// posix - wcsistr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wcsistr(const wchar_t* _Str, const wchar_t* _SubStr);
 
-// posix : wcscpy
+// posix - wcscpy
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcscpy(wchar_t* _Dst, const wchar_t* _Source);
 
-// posix : wcsncpy
+// posix - wcsncpy
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsncpy(wchar_t* _Dst, const wchar_t* _Source, size_t _Length);
 
-// posix : wcscat
+// posix - wcscat
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcscat(wchar_t* _Str1, const wchar_t* _Str2);
 
-// posix : wcsncat
+// posix - wcsncat
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsncat(wchar_t* _Str1, const wchar_t* _Str2, size_t _Length);
 
-// posix : wcsdup
+// posix - wcsdup
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsdup(const wchar_t* _String);
 
-// posix : wcsndup
+// posix - wcsndup
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsndup(const wchar_t* _String, size_t _Length);
 
-// posix : wcsupr
+// posix - wcsupr
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsupr(wchar_t* _String);
 
-// posix : wcslwr
+// posix - wcslwr
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcslwr(wchar_t* _String);
 
-// posix : wcsrev
+// posix - wcsrev
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wcsrev(wchar_t* _String);
 
 
 
 
 
-// posix : strutow
+// posix - strutow
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_strutow(const char* _UTF8);
 
-// posix : stratow
+// posix - stratow
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_stratow(const char* _ASCII);
 
-// posix : strwtou
+// posix - strwtou
 _XPOSIXAPI_ char* __xcall__ x_posix_strwtou(const wchar_t* _UNICODE);
 
-// posix : strwtoa
+// posix - strwtoa
 _XPOSIXAPI_ char* __xcall__ x_posix_strwtoa(const wchar_t* _UNICODE);
 
 
 
 
 
-// posix : atof
+// posix - atof
 _XPOSIXAPI_ double __xcall__ x_posix_atof(const char* _String);
 
-// posix : atoi
+// posix - atoi
 _XPOSIXAPI_ int __xcall__ x_posix_atoi(const char* _String);
 
-// posix : atol
+// posix - atol
 _XPOSIXAPI_ long __xcall__ x_posix_atol(const char* _String);
 
-// posix : atoll
+// posix - atoll
 _XPOSIXAPI_ long long __xcall__ x_posix_atoll(const char* _String);
 
-// posix : strtof
+// posix - strtof
 _XPOSIXAPI_ float __xcall__ x_posix_strtof(const char* _String, char** _EndPtr);
 
-// posix : strtod
+// posix - strtod
 _XPOSIXAPI_ double __xcall__ x_posix_strtod(const char* _String, char** _EndPtr);
 
-// posix : strtold
+// posix - strtold
 _XPOSIXAPI_ long double __xcall__ x_posix_strtold(const char* _String, char** _EndPtr);
 
-// posix : strtol
+// posix - strtol
 _XPOSIXAPI_ long __xcall__ x_posix_strtol(const char* _String, char** _EndPtr, int _Radix);
 
-// posix : strtoul
+// posix - strtoul
 _XPOSIXAPI_ unsigned long __xcall__ x_posix_strtoul(const char* _String, char** _EndPtr, int _Radix);
 
-// posix : strtoll
+// posix - strtoll
 _XPOSIXAPI_ long long __xcall__ x_posix_strtoll(const char* _String, char** _EndPtr, int _Radix);
 
-// posix : strtoull
+// posix - strtoull
 _XPOSIXAPI_ unsigned long long __xcall__ x_posix_strtoull(const char* _String, char** _EndPtr, int _Radix);
 
 

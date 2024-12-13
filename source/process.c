@@ -51,7 +51,7 @@ typedef struct _private_process_find_data
 
 
 
-// posix : chdir
+// posix - chdir
 _XPOSIXAPI_ int __xcall__ x_posix_chdir(const char* _Directory)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -76,7 +76,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_chdir(const char* _Directory)
 #endif
 }
 
-// posix : getcwd
+// posix - getcwd
 _XPOSIXAPI_ char* __xcall__ x_posix_getcwd(char* _Directory, size_t _Size)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -98,7 +98,7 @@ _XPOSIXAPI_ char* __xcall__ x_posix_getcwd(char* _Directory, size_t _Size)
 #endif
 }
 
-// posix : popen
+// posix - popen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_popen(const char* _Command, const char* _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -124,7 +124,7 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_popen(const char* _Command, const char* _Mod
 #endif
 }
 
-// posix : pclose
+// posix - pclose
 _XPOSIXAPI_ int __xcall__ x_posix_pclose(FILE* _Stream)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -134,13 +134,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_pclose(FILE* _Stream)
 #endif
 }
 
-// posix : perror
+// posix - perror
 _XPOSIXAPI_ void __xcall__ x_posix_perror(const char* _ErrorMessage)
 {
 	perror(_ErrorMessage);
 }
 
-// posix : getpid
+// posix - getpid
 _XPOSIXAPI_ pid_t __xcall__ x_posix_getpid(void)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -150,7 +150,7 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_getpid(void)
 #endif
 }
 
-// posix : getppid
+// posix - getppid
 _XPOSIXAPI_ pid_t __xcall__ x_posix_getppid(void)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -177,7 +177,7 @@ _XPOSIXAPI_ pid_t __xcall__ x_posix_getppid(void)
 #endif
 }
 
-// posix : kill
+// posix - kill
 _XPOSIXAPI_ int __xcall__ x_posix_kill(pid_t _Pid, int _Sig)
 {
 	return x_proc_kill_id(_Pid, _Sig);

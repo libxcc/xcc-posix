@@ -29,28 +29,28 @@ typedef struct x_proc_data_t
 
 
 
-// posix : chdir
+// posix - chdir
 _XPOSIXAPI_ int __xcall__ x_posix_chdir(const char* _Directory);
 
-// posix : getcwd
+// posix - getcwd
 _XPOSIXAPI_ char* __xcall__ x_posix_getcwd(char* _Directory, size_t _Size);
 
-// posix : popen
+// posix - popen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_popen(const char* _Command, const char* _Mode);
 
-// posix : pclose
+// posix - pclose
 _XPOSIXAPI_ int __xcall__ x_posix_pclose(FILE* _Stream);
 
-// posix : perror
+// posix - perror
 _XPOSIXAPI_ void __xcall__ x_posix_perror(const char* _ErrorMessage);
 
-// posix : getpid
+// posix - getpid
 _XPOSIXAPI_ pid_t __xcall__ x_posix_getpid(void);
 
-// posix : getppid
+// posix - getppid
 _XPOSIXAPI_ pid_t __xcall__ x_posix_getppid(void);
 
-// posix : kill
+// posix - kill
 _XPOSIXAPI_ int __xcall__ x_posix_kill(pid_t _Pid, int _Sig);
 
 

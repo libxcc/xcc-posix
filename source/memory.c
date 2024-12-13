@@ -2,25 +2,25 @@
 
 
 
-// posix : malloc
+// posix - malloc
 _XPOSIXAPI_ void* __xcall__ x_posix_malloc(size_t _Size)
 {
 	return malloc(_Size);
 }
 
-// posix : calloc
+// posix - calloc
 _XPOSIXAPI_ void* __xcall__ x_posix_calloc(size_t _Count, size_t _Size)
 {
 	return calloc(_Count, _Size);
 }
 
-// posix : realloc
+// posix - realloc
 _XPOSIXAPI_ void* __xcall__ x_posix_realloc(void* _Block, size_t _Size)
 {
 	return realloc(_Block, _Size);
 }
 
-// posix : memdup
+// posix - memdup
 _XPOSIXAPI_ void* __xcall__ x_posix_memdup(const void* _Memory, size_t _Size)
 {
 	if(_Memory == NULL || _Size == 0)
@@ -35,7 +35,7 @@ _XPOSIXAPI_ void* __xcall__ x_posix_memdup(const void* _Memory, size_t _Size)
 	return vTarget;
 }
 
-// posix : free
+// posix - free
 _XPOSIXAPI_ void __xcall__ x_posix_free(void* _Memory)
 {
 	free(_Memory);
@@ -45,31 +45,31 @@ _XPOSIXAPI_ void __xcall__ x_posix_free(void* _Memory)
 
 
 
-// posix : memset
+// posix - memset
 _XPOSIXAPI_ void* __xcall__ x_posix_memset(void* _Memory, int _Value, size_t _Size)
 {
 	return memset(_Memory, _Value, _Size);
 }
 
-// posix : memcpy
+// posix - memcpy
 _XPOSIXAPI_ void* __xcall__ x_posix_memcpy(void* _Dst, const void* _Src, size_t _Size)
 {
 	return memcpy(_Dst, _Src, _Size);
 }
 
-// posix : memmove
+// posix - memmove
 _XPOSIXAPI_ void* __xcall__ x_posix_memmove(void* _Dst, const void* _Src, size_t _Size)
 {
 	return memmove(_Dst, _Src, _Size);
 }
 
-// posix : memchr
+// posix - memchr
 _XPOSIXAPI_ void* __xcall__ x_posix_memchr(const void* _Buf, int _Val, size_t _MaxCount)
 {
 	return memchr(_Buf, _Val, _MaxCount);
 }
 
-// posix : memrchr
+// posix - memrchr
 _XPOSIXAPI_ void* __xcall__ x_posix_memrchr(const void* _Buf, int _Val, size_t _MaxCount)
 {
 	if(_Buf == NULL || _MaxCount == 0)
@@ -92,13 +92,13 @@ _XPOSIXAPI_ void* __xcall__ x_posix_memrchr(const void* _Buf, int _Val, size_t _
 	return (void*)vMemory;
 }
 
-// posix : memcmp
+// posix - memcmp
 _XPOSIXAPI_ int __xcall__ x_posix_memcmp(const void* _Buf1, const void* _Buf2, size_t _Size)
 {
 	return memcmp(_Buf1, _Buf2, _Size);
 }
 
-// posix : memrev
+// posix - memrev
 _XPOSIXAPI_ void* __xcall__ x_posix_memrev(void* _Memory, size_t _Size)
 {
 	char*		vMemory = (char*)_Memory;
@@ -114,7 +114,7 @@ _XPOSIXAPI_ void* __xcall__ x_posix_memrev(void* _Memory, size_t _Size)
 	return vMemory;
 }
 
-// posix : memmem
+// posix - memmem
 _XPOSIXAPI_ const void* __xcall__ x_posix_memmem(const void* _SrcBuf, size_t _SrcLen, const void* _SubMem, size_t _SubLen)
 {
 	if(_SrcBuf == NULL || _SrcLen == 0 || _SubMem == NULL || _SubLen == 0 || _SrcLen < _SubLen)
@@ -140,31 +140,31 @@ _XPOSIXAPI_ const void* __xcall__ x_posix_memmem(const void* _SrcBuf, size_t _Sr
 
 
 
-// posix : wmemset
+// posix - wmemset
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wmemset(wchar_t* _Memory, wchar_t _Value, size_t _Size)
 {
 	return wmemset(_Memory, _Value, _Size);
 }
 
-// posix : wmemcpy
+// posix - wmemcpy
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wmemcpy(wchar_t* _Dst, const wchar_t* _Src, size_t _Size)
 {
 	return wmemcpy(_Dst, _Src, _Size);
 }
 
-// posix : wmemmove
+// posix - wmemmove
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wmemmove(wchar_t* _Dst, const wchar_t* _Src, size_t _Size)
 {
 	return wmemmove(_Dst, _Src, _Size);
 }
 
-// posix : wmemchr
+// posix - wmemchr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wmemchr(const wchar_t* _Buf, wchar_t _Val, size_t _MaxCount)
 {
 	return wmemchr(_Buf, _Val, _MaxCount);
 }
 
-// posix : wmemrchr
+// posix - wmemrchr
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wmemrchr(const wchar_t* _Buf, wchar_t _Val, size_t _MaxCount)
 {
 	if(_Buf == NULL || _MaxCount == 0)
@@ -187,13 +187,13 @@ _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wmemrchr(const wchar_t* _Buf, wchar
 	return (void*)vMemory;
 }
 
-// posix : wmemcmp
+// posix - wmemcmp
 _XPOSIXAPI_ int __xcall__ x_posix_wmemcmp(const wchar_t* _Buf1, const wchar_t* _Buf2, size_t _Size)
 {
 	return wmemcmp(_Buf1, _Buf2, _Size);
 }
 
-// posix : wmemrev
+// posix - wmemrev
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wmemrev(wchar_t* _Memory, size_t _Size)
 {
 	wchar_t*	vMemory = (wchar_t*)_Memory;
@@ -209,7 +209,7 @@ _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wmemrev(wchar_t* _Memory, size_t _Size)
 	return vMemory;
 }
 
-// posix : wmemmem
+// posix - wmemmem
 _XPOSIXAPI_ const wchar_t* __xcall__ x_posix_wmemmem(const wchar_t* _SrcBuf, size_t _SrcLen, const wchar_t* _SubMem, size_t _SubLen)
 {
 	if(_SrcBuf == NULL || _SrcLen == 0 || _SubMem == NULL || _SubLen == 0 || _SrcLen < _SubLen)

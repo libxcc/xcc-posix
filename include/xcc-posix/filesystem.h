@@ -51,196 +51,196 @@ typedef struct x_fs_space_t
 
 
 
-// posix : dirname
+// posix - dirname
 _XPOSIXAPI_ char* __xcall__ x_posix_dirname(char* _FilePath);
 
-// posix : basename
+// posix - basename
 _XPOSIXAPI_ char* __xcall__ x_posix_basename(char* _FilePath);
 
 
 
-// posix : wdirname
+// posix - wdirname
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wdirname(wchar_t* _FilePath);
 
-// posix : wbasename
+// posix - wbasename
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wbasename(wchar_t* _FilePath);
 
 
 
-// posix : dup
+// posix - dup
 _XPOSIXAPI_ int __xcall__ x_posix_dup(int _FileHandle);
 
-// posix : dup2
+// posix - dup2
 _XPOSIXAPI_ int __xcall__ x_posix_dup2(int _FileHandleSrc, int _FileHandleDst);
 
-// posix : open
+// posix - open
 _XPOSIXAPI_ int __xcall__ x_posix_open(const char* _Filename, int _Flag, ...);
 
-// posix : lseek
+// posix - lseek
 _XPOSIXAPI_ off_t __xcall__ x_posix_lseek(int _FileHandle, off_t _Offset, int _Origin);
 
-// posix : read
+// posix - read
 _XPOSIXAPI_ ssize_t __xcall__ x_posix_read(int _FileHandle, void* _Buffer, size_t _Count);
 
-// posix : write
+// posix - write
 _XPOSIXAPI_ ssize_t __xcall__ x_posix_write(int _FileHandle, const void* _Buffer, size_t _Count);
 
-// posix : close
+// posix - close
 _XPOSIXAPI_ int __xcall__ x_posix_close(int _FileHandle);
 
-// posix : sync
+// posix - sync
 _XPOSIXAPI_ void __xcall__ x_posix_sync(void);
 
 
 
-// posix : access
+// posix - access
 _XPOSIXAPI_ int __xcall__ x_posix_access(const char* _Path, int _Mode);
 
-// posix : mkdir
+// posix - mkdir
 _XPOSIXAPI_ int __xcall__ x_posix_mkdir(const char* _Directory, mode_t _Mode);
 
-// posix : mkdir_r
+// posix - mkdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_mkdir_r(const char* _Directory, mode_t _Mode);
 
-// posix : chmod
+// posix - chmod
 _XPOSIXAPI_ int __xcall__ x_posix_chmod(const char* _Path, int _Mode);
 
-// posix : rmdir
+// posix - rmdir
 _XPOSIXAPI_ int __xcall__ x_posix_rmdir(const char* _Path);
 
-// posix : rmdir_r
+// posix - rmdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_rmdir_r(const char* _Path);
 
-// posix : remove
+// posix - remove
 _XPOSIXAPI_ int __xcall__ x_posix_remove(const char* _FileName);
 
-// posix : rename
+// posix - rename
 _XPOSIXAPI_ int __xcall__ x_posix_rename(const char* _OldFileName, const char* _NewFileName);
 
-// posix : unlink
+// posix - unlink
 _XPOSIXAPI_ int __xcall__ x_posix_unlink(const char* _FileName);
 
-// posix : tmpfile
+// posix - tmpfile
 _XPOSIXAPI_ FILE* __xcall__ x_posix_tmpfile(void);
 
-// posix : truncate
+// posix - truncate
 _XPOSIXAPI_ int __xcall__ x_posix_truncate(const char* _Filename, x_int64_t _Size);
 
 
 
-// posix : waccess
+// posix - waccess
 _XPOSIXAPI_ int __xcall__ x_posix_waccess(const wchar_t* _Path, int _Mode);
 
-// posix : wmkdir
+// posix - wmkdir
 _XPOSIXAPI_ int __xcall__ x_posix_wmkdir(const wchar_t* _Directory, mode_t _Mode);
 
-// posix : wmkdir_r
+// posix - wmkdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_wmkdir_r(const wchar_t* _Directory, mode_t _Mode);
 
-// posix : wchmod
+// posix - wchmod
 _XPOSIXAPI_ int __xcall__ x_posix_wchmod(const wchar_t* _Path, int _Mode);
 
-// posix : wrmdir
+// posix - wrmdir
 _XPOSIXAPI_ int __xcall__ x_posix_wrmdir(const wchar_t* _Path);
 
-// posix : wrmdir_r
+// posix - wrmdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_wrmdir_r(const wchar_t* _Path);
 
-// posix : wremove
+// posix - wremove
 _XPOSIXAPI_ int __xcall__ x_posix_wremove(const wchar_t* _FileName);
 
-// posix : wrename
+// posix - wrename
 _XPOSIXAPI_ int __xcall__ x_posix_wrename(const wchar_t* _OldFileName, const wchar_t* _NewFileName);
 
-// posix : wunlink
+// posix - wunlink
 _XPOSIXAPI_ int __xcall__ x_posix_wunlink(const wchar_t* _FileName);
 
 
 
-// posix : fopen
+// posix - fopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_fopen(const char* _Filename, const char* _Mode);
 
-// posix : fdopen
+// posix - fdopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_fdopen(int _Fildes, const char* _Mode);
 
-// posix : freopen
+// posix - freopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_freopen(const char* _Filename, const char* _Mode, FILE* _Stream);
 
 
 
-// posix : wfopen
+// posix - wfopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_wfopen(const wchar_t* _Filename, const wchar_t* _Mode);
 
-// posix : wfdopen
+// posix - wfdopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_wfdopen(int _Fildes, const wchar_t* _Mode);
 
-// posix : wfreopen
+// posix - wfreopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_wfreopen(const wchar_t* _Filename, const wchar_t* _Mode, FILE* _Stream);
 
 
 
-// posix : fileno
+// posix - fileno
 _XPOSIXAPI_ int __xcall__ x_posix_fileno(FILE* _Stream);
 
-// posix : fseek
+// posix - fseek
 _XPOSIXAPI_ int __xcall__ x_posix_fseek(FILE* _Stream, long _Offset, int _Whence);
 
-// posix : fseek64
+// posix - fseek64
 _XPOSIXAPI_ int64_t __xcall__ x_posix_fseek64(FILE* _Stream, int64_t _Offset, int _Whence);
 
-// posix : ftell
+// posix - ftell
 _XPOSIXAPI_ long __xcall__ x_posix_ftell(FILE* _Stream);
 
-// posix : ftell64
+// posix - ftell64
 _XPOSIXAPI_ int64_t __xcall__ x_posix_ftell64(FILE* _Stream);
 
-// posix : rewind
+// posix - rewind
 _XPOSIXAPI_ void __xcall__ x_posix_rewind(FILE* _Stream);
 
-// posix : fgetc
+// posix - fgetc
 _XPOSIXAPI_ int __xcall__ x_posix_fgetc(FILE* _Stream);
 
-// posix : fputc
+// posix - fputc
 _XPOSIXAPI_ int __xcall__ x_posix_fputc(int _Character, FILE* _Stream);
 
-// posix : fgets
+// posix - fgets
 _XPOSIXAPI_ char* __xcall__ x_posix_fgets(char* _Buffer, int _MaxCount, FILE* _Stream);
 
-// posix : fputs
+// posix - fputs
 _XPOSIXAPI_ int __xcall__ x_posix_fputs(const char* _Buffer, FILE* _Stream);
 
-// posix : fread
+// posix - fread
 _XPOSIXAPI_ size_t __xcall__ x_posix_fread(void* _Memory, size_t _Size, size_t _Item, FILE* _Stream);
 
-// posix : fwrite
+// posix - fwrite
 _XPOSIXAPI_ size_t __xcall__ x_posix_fwrite(const void* _Memory, size_t _Size, size_t _Item, FILE* _Stream);
 
-// posix : feof
+// posix - feof
 _XPOSIXAPI_ int __xcall__ x_posix_feof(FILE* _Stream);
 
-// posix : ferror
+// posix - ferror
 _XPOSIXAPI_ int __xcall__ x_posix_ferror(FILE* _Stream);
 
-// posix : fsync
+// posix - fsync
 _XPOSIXAPI_ int __xcall__ x_posix_fsync(int _Fildes);
 
-// posix : fclose
+// posix - fclose
 _XPOSIXAPI_ int __xcall__ x_posix_fclose(FILE* _Stream);
 
-// posix : fsize
+// posix - fsize
 _XPOSIXAPI_ unsigned long long __xcall__ x_posix_fsize(const char* _Filename);
 
 
 
-// posix : opendir
+// posix - opendir
 XCC_DEPRECATE_OBSOLETE(x_fs_find_first)
 _XPOSIXAPI_ DIR* __xcall__ x_posix_opendir(const char* _Name);
 
-// posix : readdir
+// posix - readdir
 XCC_DEPRECATE_OBSOLETE(x_fs_find_next)
 _XPOSIXAPI_ struct dirent* __xcall__ x_posix_readdir(DIR* _Stream);
 
-// posix : closedir
+// posix - closedir
 XCC_DEPRECATE_OBSOLETE(x_fs_find_close)
 _XPOSIXAPI_ int __xcall__ x_posix_closedir(DIR* _Stream);
 

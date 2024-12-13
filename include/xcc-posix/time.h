@@ -7,22 +7,22 @@ XCC_CXX_EXTERN_BEGIN
 
 
 
-// posix : srand
+// posix - srand
 _XPOSIXAPI_ void __xcall__ x_posix_srand(unsigned int _Seed);
 
-// posix : rand
+// posix - rand
 _XPOSIXAPI_ int __xcall__ x_posix_rand(void);
 
-// posix : time
+// posix - time
 _XPOSIXAPI_ time_t __xcall__ x_posix_time(time_t* _Seconds);
 
-// posix : sleep
+// posix - sleep
 _XPOSIXAPI_ unsigned int __xcall__ x_posix_sleep(unsigned int _Seconds);
 
-// posix : msleep
+// posix - msleep
 _XPOSIXAPI_ unsigned int __xcall__ x_posix_msleep(unsigned int _Milliseconds);
 
-// posix : usleep
+// posix - usleep
 _XPOSIXAPI_ unsigned int __xcall__ x_posix_usleep(unsigned int _Microseconds);
 
 
@@ -49,6 +49,17 @@ _XPOSIXAPI_ x_time_type __xcall__ x_time_hpt_calc(HANDLE _Handle);
 
 // 高精度计时器: 释放
 _XPOSIXAPI_ x_time_type __xcall__ x_time_hpt_free(HANDLE _Handle);
+
+
+
+// NTP - 请求授时中心的时间 - 秒
+_XPOSIXAPI_ x_time_type __xcall__ x_time_ntp_sec(const char* _NtpUrl);
+
+// NTP - 请求授时中心的时间 - 毫秒
+_XPOSIXAPI_ x_time_type __xcall__ x_time_ntp_msec(const char* _NtpUrl);
+
+// NTP - 请求授时中心的时间 - 微秒
+_XPOSIXAPI_ x_time_type __xcall__ x_time_ntp_usec(const char* _NtpUrl);
 
 
 

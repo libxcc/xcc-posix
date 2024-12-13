@@ -3,13 +3,13 @@
 
 
 
-// posix : setlocale
+// posix - setlocale
 _XPOSIXAPI_ char* __xcall__ x_posix_setlocale(int _Category, const char* _Locale)
 {
 	return setlocale(_Category, _Locale);
 }
 
-// posix : wcstombs
+// posix - wcstombs
 _XPOSIXAPI_ size_t __xcall__ x_posix_wcstombs(char* _MBS, const wchar_t* _WCS, size_t _Length)
 {
 	if(_WCS == NULL)
@@ -19,7 +19,7 @@ _XPOSIXAPI_ size_t __xcall__ x_posix_wcstombs(char* _MBS, const wchar_t* _WCS, s
 	return wcstombs(_MBS, _WCS, _Length);
 }
 
-// posix : mbstowcs
+// posix - mbstowcs
 _XPOSIXAPI_ size_t __xcall__ x_posix_mbstowcs(wchar_t* _WCS, const char* _MBS, size_t _Length)
 {
 	if(_MBS == NULL)

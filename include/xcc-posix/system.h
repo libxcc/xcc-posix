@@ -7,55 +7,55 @@ XCC_CXX_EXTERN_BEGIN
 
 
 
-// posix : system
+// posix - system
 _XPOSIXAPI_ int __xcall__ x_posix_system(const char* _Command);
 
-// posix : pause
+// posix - pause
 _XPOSIXAPI_ int __xcall__ x_posix_pause(void);
 
 
 
 
 
-// posix : wsystem
+// posix - wsystem
 _XPOSIXAPI_ int __xcall__ x_posix_wsystem(const wchar_t* _Command);
 
 
 
 
 
-// posix : gethostid
+// posix - gethostid
 _XPOSIXAPI_ long __xcall__ x_posix_gethostid(void);
 
-// posix : errno
+// posix - errno
 _XPOSIXAPI_ int __xcall__ x_posix_errno(void);
 
-// posix : seterrno
+// posix - seterrno
 _XPOSIXAPI_ int __xcall__ x_posix_seterrno(int _Errno);
 
-// posix : strerror
+// posix - strerror
 _XPOSIXAPI_ char* __xcall__ x_posix_strerror(int _Error);
 
-// posix : abort
+// posix - abort
 _XPOSIXAPI_ void __xcall__ x_posix_abort(void);
 
-// posix : exit
+// posix - exit
 _XPOSIXAPI_ void __xcall__ x_posix_exit(int _Status);
 
 
 
 
 
-// posix : getenv
+// posix - getenv
 _XPOSIXAPI_ char* __xcall__ x_posix_getenv(const char* _Name);
 
-// posix : setenv
+// posix - setenv
 _XPOSIXAPI_ int __xcall__ x_posix_setenv(const char* _Name, const char* _Value, int _Overwrite);
 
-// posix : putenv
+// posix - putenv
 _XPOSIXAPI_ int __xcall__ x_posix_putenv(char* _String);
 
-// posix : unsetenv
+// posix - unsetenv
 _XPOSIXAPI_ int __xcall__ x_posix_unsetenv(const char* _Name);
 
 

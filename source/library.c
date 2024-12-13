@@ -8,7 +8,7 @@
 
 
 
-// posix : dlopen
+// posix - dlopen
 _XPOSIXAPI_ void* __xcall__ x_posix_dlopen(const char* _Library, int _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -27,7 +27,7 @@ _XPOSIXAPI_ void* __xcall__ x_posix_dlopen(const char* _Library, int _Mode)
 #endif
 }
 
-// posix : dlsym
+// posix - dlsym
 _XPOSIXAPI_ void* __xcall__ x_posix_dlsym(void* _Handle, const char* _ProcName)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -37,7 +37,7 @@ _XPOSIXAPI_ void* __xcall__ x_posix_dlsym(void* _Handle, const char* _ProcName)
 #endif
 }
 
-// posix : dlclose
+// posix - dlclose
 _XPOSIXAPI_ int __xcall__ x_posix_dlclose(void* _Handle)
 {
 #if defined(XCC_SYSTEM_WINDOWS)

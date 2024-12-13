@@ -15,13 +15,13 @@
 
 
 
-// posix : gethostbyname
+// posix - gethostbyname
 _XPOSIXAPI_ struct hostent* __xcall__ x_socket_get_host_by_name(const char* _Name)
 {
 	return gethostbyname(_Name);
 }
 
-// posix : gethostname
+// posix - gethostname
 _XPOSIXAPI_ int __xcall__ x_socket_get_host_name(char* _Name, size_t _Length)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -31,7 +31,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_get_host_name(char* _Name, size_t _Length)
 #endif
 }
 
-// posix : sethostname
+// posix - sethostname
 _XPOSIXAPI_ int __xcall__ x_socket_set_host_name(const char* _Name, size_t _Length)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -50,31 +50,31 @@ _XPOSIXAPI_ int __xcall__ x_socket_set_host_name(const char* _Name, size_t _Leng
 #endif
 }
 
-// posix : socket
+// posix - socket
 _XPOSIXAPI_ x_socket_t __xcall__ x_socket_open(int _Family, int _Type, int _Protocol)
 {
 	return socket(_Family, _Type, _Protocol);
 }
 
-// posix : connect
+// posix - connect
 _XPOSIXAPI_ int __xcall__ x_socket_connect(x_socket_t _Socket, const struct sockaddr* _Address, socklen_t _Length)
 {
 	return connect(_Socket, _Address, _Length);
 }
 
-// posix : accept
+// posix - accept
 _XPOSIXAPI_ x_socket_t __xcall__ x_socket_accept(x_socket_t _Socket, struct sockaddr* _Address, socklen_t* _Length)
 {
 	return accept(_Socket, _Address, _Length);
 }
 
-// posix : bind
+// posix - bind
 _XPOSIXAPI_ int __xcall__ x_socket_bind(x_socket_t _Socket, const struct sockaddr* _Address, socklen_t _Length)
 {
 	return bind(_Socket, _Address, _Length);
 }
 
-// posix : close
+// posix - close
 _XPOSIXAPI_ int __xcall__ x_socket_close(x_socket_t _Socket)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -84,19 +84,19 @@ _XPOSIXAPI_ int __xcall__ x_socket_close(x_socket_t _Socket)
 #endif
 }
 
-// posix : getpeername
+// posix - getpeername
 _XPOSIXAPI_ int __xcall__ x_socket_get_peer_name(x_socket_t _Socket, struct sockaddr* _Address, socklen_t* _Length)
 {
 	return getpeername(_Socket, _Address, _Length);
 }
 
-// posix : getsockname
+// posix - getsockname
 _XPOSIXAPI_ int __xcall__ x_socket_get_sock_name(x_socket_t _Socket, struct sockaddr* _Address, socklen_t* _Length)
 {
 	return getsockname(_Socket, _Address, _Length);
 }
 
-// posix : getsockopt
+// posix - getsockopt
 _XPOSIXAPI_ int __xcall__ x_socket_get_opt(x_socket_t _Socket, int _Level, int _OptName, void* _OptValue, socklen_t* _OptLength)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -106,7 +106,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_get_opt(x_socket_t _Socket, int _Level, int _
 #endif
 }
 
-// posix : setsockopt
+// posix - setsockopt
 _XPOSIXAPI_ int __xcall__ x_socket_set_opt(x_socket_t _Socket, int _Level, int _OptName, const void* _OptValue, socklen_t _OptLength)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -116,7 +116,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_set_opt(x_socket_t _Socket, int _Level, int _
 #endif
 }
 
-// posix : inet_addr
+// posix - inet_addr
 _XPOSIXAPI_ struct in_addr __xcall__ x_socket_inet_addr(const char* _CP)
 {
 	struct in_addr		vAddress;
@@ -124,19 +124,19 @@ _XPOSIXAPI_ struct in_addr __xcall__ x_socket_inet_addr(const char* _CP)
 	return vAddress;
 }
 
-// posix : inet_ntoa
+// posix - inet_ntoa
 _XPOSIXAPI_ char* __xcall__ x_socket_inet_ntoa(struct in_addr _IN)
 {
 	return inet_ntoa(_IN);
 }
 
-// posix : listen
+// posix - listen
 _XPOSIXAPI_ int __xcall__ x_socket_listen(x_socket_t _Socket, int _Backlog)
 {
 	return listen(_Socket, _Backlog);
 }
 
-// posix : recv
+// posix - recv
 _XPOSIXAPI_ int __xcall__ x_socket_recv(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -146,7 +146,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_recv(x_socket_t _Socket, void* _Buffer, int _
 #endif
 }
 
-// posix : recvfrom
+// posix - recvfrom
 _XPOSIXAPI_ int __xcall__ x_socket_recvfrom(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags, struct sockaddr* _From, socklen_t* _FromLen)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -156,7 +156,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_recvfrom(x_socket_t _Socket, void* _Buffer, i
 #endif
 }
 
-// posix : send
+// posix - send
 _XPOSIXAPI_ int __xcall__ x_socket_send(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -166,7 +166,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_send(x_socket_t _Socket, const void* _Buffer,
 #endif
 }
 
-// posix : sendto
+// posix - sendto
 _XPOSIXAPI_ int __xcall__ x_socket_sendto(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -176,19 +176,19 @@ _XPOSIXAPI_ int __xcall__ x_socket_sendto(x_socket_t _Socket, const void* _Buffe
 #endif
 }
 
-// posix : shutdown
+// posix - shutdown
 _XPOSIXAPI_ int __xcall__ x_socket_shutdown(x_socket_t _Socket, int _Now)
 {
 	return shutdown(_Socket, _Now);
 }
 
-// posix : select
+// posix - select
 _XPOSIXAPI_ int __xcall__ x_socket_select(int _Fds, fd_set* _ReadFds, fd_set* _WriteFds, fd_set* _ExceptFds, struct timeval* _Timeout)
 {
 	return select(_Fds, _ReadFds, _WriteFds, _ExceptFds, _Timeout);
 }
 
-// posix : poll
+// posix - poll
 _XPOSIXAPI_ int __xcall__ x_socket_poll(struct pollfd _Fds[], nfds_t _Count, int _Timeout)
 {
 #if defined(X_CMAKE_HAVE_POLL)
@@ -202,7 +202,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_poll(struct pollfd _Fds[], nfds_t _Count, int
 #endif
 }
 
-// posix : ppoll
+// posix - ppoll
 _XPOSIXAPI_ int __xcall__ x_socket_ppoll(struct pollfd* _Fds, nfds_t _Count, const struct timespec* _Timeout, const sigset_t* _SigMask)
 {
 #if defined(X_CMAKE_HAVE_PPOLL)
@@ -595,7 +595,7 @@ _XPOSIXAPI_ char* __xcall__ x_socket_address_to_string(const struct sockaddr* _A
 
 
 
-// posix : 接收所有数据
+// posix - 接收所有数据
 _XPOSIXAPI_ int __xcall__ x_socket_recv_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags)
 {
 	char*		vBytes = (char*)_Buffer;
@@ -612,7 +612,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_recv_all(x_socket_t _Socket, void* _Buffer, i
 	return vSyncSize;
 }
 
-// posix : 接收所有数据
+// posix - 接收所有数据
 _XPOSIXAPI_ int __xcall__ x_socket_recvfrom_all(x_socket_t _Socket, void* _Buffer, int _Length, int _Flags, struct sockaddr* _From, socklen_t* _FromLen)
 {
 	char*		vBytes = (char*)_Buffer;
@@ -629,7 +629,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_recvfrom_all(x_socket_t _Socket, void* _Buffe
 	return vSyncSize;
 }
 
-// posix : 发送所有数据
+// posix - 发送所有数据
 _XPOSIXAPI_ int __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags)
 {
 	const char*	vBytes = (const char*)_Buffer;
@@ -646,7 +646,7 @@ _XPOSIXAPI_ int __xcall__ x_socket_send_all(x_socket_t _Socket, const void* _Buf
 	return vSyncSize;
 }
 
-// posix : 发送所有数据
+// posix - 发送所有数据
 _XPOSIXAPI_ int __xcall__ x_socket_sendto_all(x_socket_t _Socket, const void* _Buffer, int _Length, int _Flags, const struct sockaddr* _To, socklen_t _ToLen)
 {
 	const char*	vBytes = (const char*)_Buffer;

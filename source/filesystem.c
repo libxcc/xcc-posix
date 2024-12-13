@@ -21,7 +21,7 @@
 
 
 
-// posix : dirname
+// posix - dirname
 _XPOSIXAPI_ char* __xcall__ x_posix_dirname(char* _FilePath)
 {
 	if(_FilePath == NULL)
@@ -97,7 +97,7 @@ _XPOSIXAPI_ char* __xcall__ x_posix_dirname(char* _FilePath)
 	return path;
 }
 
-// posix : basename
+// posix - basename
 _XPOSIXAPI_ char* __xcall__ x_posix_basename(char* _FilePath)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
@@ -120,7 +120,7 @@ _XPOSIXAPI_ char* __xcall__ x_posix_basename(char* _FilePath)
 
 
 
-// posix : wdirname
+// posix - wdirname
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wdirname(wchar_t* _FilePath)
 {
 	if(_FilePath == NULL)
@@ -196,7 +196,7 @@ _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wdirname(wchar_t* _FilePath)
 	return path;
 }
 
-// posix : wbasename
+// posix - wbasename
 _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wbasename(wchar_t* _FilePath)
 {
 #if defined(XCC_PARAMETER_VALIDATION)
@@ -219,7 +219,7 @@ _XPOSIXAPI_ wchar_t* __xcall__ x_posix_wbasename(wchar_t* _FilePath)
 
 
 
-// posix : dup
+// posix - dup
 _XPOSIXAPI_ int __xcall__ x_posix_dup(int _FileHandle)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -229,7 +229,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_dup(int _FileHandle)
 #endif
 }
 
-// posix : dup2
+// posix - dup2
 _XPOSIXAPI_ int __xcall__ x_posix_dup2(int _FileHandleSrc, int _FileHandleDst)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -239,7 +239,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_dup2(int _FileHandleSrc, int _FileHandleDst)
 #endif
 }
 
-// posix : open
+// posix - open
 _XPOSIXAPI_ int __xcall__ x_posix_open(const char* _Filename, int _Flag, ...)
 {
 	int		vMode = 0;
@@ -269,7 +269,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_open(const char* _Filename, int _Flag, ...)
 #endif
 }
 
-// posix : lseek
+// posix - lseek
 _XPOSIXAPI_ off_t __xcall__ x_posix_lseek(int _FileHandle, off_t _Offset, int _Origin)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -279,7 +279,7 @@ _XPOSIXAPI_ off_t __xcall__ x_posix_lseek(int _FileHandle, off_t _Offset, int _O
 #endif
 }
 
-// posix : read
+// posix - read
 _XPOSIXAPI_ ssize_t __xcall__ x_posix_read(int _FileHandle, void* _Buffer, size_t _Count)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -289,7 +289,7 @@ _XPOSIXAPI_ ssize_t __xcall__ x_posix_read(int _FileHandle, void* _Buffer, size_
 #endif
 }
 
-// posix : write
+// posix - write
 _XPOSIXAPI_ ssize_t __xcall__ x_posix_write(int _FileHandle, const void* _Buffer, size_t _Count)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -299,7 +299,7 @@ _XPOSIXAPI_ ssize_t __xcall__ x_posix_write(int _FileHandle, const void* _Buffer
 #endif
 }
 
-// posix : close
+// posix - close
 _XPOSIXAPI_ int __xcall__ x_posix_close(int _FileHandle)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -309,7 +309,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_close(int _FileHandle)
 #endif
 }
 
-// posix : sync
+// posix - sync
 _XPOSIXAPI_ void __xcall__ x_posix_sync(void)
 {
 #if !defined(XCC_SYSTEM_WINDOWS)
@@ -319,7 +319,7 @@ _XPOSIXAPI_ void __xcall__ x_posix_sync(void)
 
 
 
-// posix : access
+// posix - access
 _XPOSIXAPI_ int __xcall__ x_posix_access(const char* _Path, int _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -340,7 +340,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_access(const char* _Path, int _Mode)
 #endif
 }
 
-// posix : mkdir
+// posix - mkdir
 _XPOSIXAPI_ int __xcall__ x_posix_mkdir(const char* _Directory, mode_t _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -362,7 +362,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_mkdir(const char* _Directory, mode_t _Mode)
 #endif
 }
 
-// posix : mkdir_r
+// posix - mkdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_mkdir_r(const char* _Directory, mode_t _Mode)
 {
 	int 		vStatus = 0;
@@ -392,7 +392,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_mkdir_r(const char* _Directory, mode_t _Mode)
 	return vStatus;
 }
 
-// posix : chmod
+// posix - chmod
 _XPOSIXAPI_ int __xcall__ x_posix_chmod(const char* _Path, int _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -413,7 +413,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_chmod(const char* _Path, int _Mode)
 #endif
 }
 
-// posix : rmdir
+// posix - rmdir
 _XPOSIXAPI_ int __xcall__ x_posix_rmdir(const char* _Path)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -434,7 +434,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_rmdir(const char* _Path)
 #endif
 }
 
-// posix : rmdir_r
+// posix - rmdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_rmdir_r(const char* _Path)
 {
 	int 			vStatus = 0;
@@ -477,7 +477,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_rmdir_r(const char* _Path)
 	return x_posix_rmdir(_Path);
 }
 
-// posix : remove
+// posix - remove
 _XPOSIXAPI_ int __xcall__ x_posix_remove(const char* _FileName)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -498,7 +498,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_remove(const char* _FileName)
 #endif
 }
 
-// posix : rename
+// posix - rename
 _XPOSIXAPI_ int __xcall__ x_posix_rename(const char* _OldFileName, const char* _NewFileName)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -524,7 +524,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_rename(const char* _OldFileName, const char* _
 #endif
 }
 
-// posix : unlink
+// posix - unlink
 _XPOSIXAPI_ int __xcall__ x_posix_unlink(const char* _FileName)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -545,13 +545,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_unlink(const char* _FileName)
 #endif
 }
 
-// posix : tmpfile
+// posix - tmpfile
 _XPOSIXAPI_ FILE* __xcall__ x_posix_tmpfile(void)
 {
 	return tmpfile();
 }
 
-// posix : truncate
+// posix - truncate
 _XPOSIXAPI_ int __xcall__ x_posix_truncate(const char* _Filename, x_int64_t _Size)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -600,7 +600,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_truncate(const char* _Filename, x_int64_t _Siz
 
 
 
-// posix : waccess
+// posix - waccess
 _XPOSIXAPI_ int __xcall__ x_posix_waccess(const wchar_t* _Path, int _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -621,7 +621,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_waccess(const wchar_t* _Path, int _Mode)
 #endif
 }
 
-// posix : wmkdir
+// posix - wmkdir
 _XPOSIXAPI_ int __xcall__ x_posix_wmkdir(const wchar_t* _Directory, mode_t _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -643,7 +643,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wmkdir(const wchar_t* _Directory, mode_t _Mode
 #endif
 }
 
-// posix : wmkdir_r
+// posix - wmkdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_wmkdir_r(const wchar_t* _Directory, mode_t _Mode)
 {
 	int 		vStatus = 0;
@@ -673,7 +673,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wmkdir_r(const wchar_t* _Directory, mode_t _Mo
 	return vStatus;
 }
 
-// posix : wchmod
+// posix - wchmod
 _XPOSIXAPI_ int __xcall__ x_posix_wchmod(const wchar_t* _Path, int _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -694,7 +694,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wchmod(const wchar_t* _Path, int _Mode)
 #endif
 }
 
-// posix : wrmdir
+// posix - wrmdir
 _XPOSIXAPI_ int __xcall__ x_posix_wrmdir(const wchar_t* _Path)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -715,7 +715,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wrmdir(const wchar_t* _Path)
 #endif
 }
 
-// posix : wrmdir_r
+// posix - wrmdir_r
 _XPOSIXAPI_ int __xcall__ x_posix_wrmdir_r(const wchar_t* _Path)
 {
 	int 			vStatus = 0;
@@ -731,7 +731,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wrmdir_r(const wchar_t* _Path)
 	return vStatus;
 }
 
-// posix : wremove
+// posix - wremove
 _XPOSIXAPI_ int __xcall__ x_posix_wremove(const wchar_t* _FileName)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -752,7 +752,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wremove(const wchar_t* _FileName)
 #endif
 }
 
-// posix : wrename
+// posix - wrename
 _XPOSIXAPI_ int __xcall__ x_posix_wrename(const wchar_t* _OldFileName, const wchar_t* _NewFileName)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -778,7 +778,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wrename(const wchar_t* _OldFileName, const wch
 #endif
 }
 
-// posix : wunlink
+// posix - wunlink
 _XPOSIXAPI_ int __xcall__ x_posix_wunlink(const wchar_t* _FileName)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -801,7 +801,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wunlink(const wchar_t* _FileName)
 
 
 
-// posix : fopen
+// posix - fopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_fopen(const char* _Filename, const char* _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -827,7 +827,7 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_fopen(const char* _Filename, const char* _Mo
 #endif
 }
 
-// posix : fdopen
+// posix - fdopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_fdopen(int _Fildes, const char* _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -837,7 +837,7 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_fdopen(int _Fildes, const char* _Mode)
 #endif
 }
 
-// posix : freopen
+// posix - freopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_freopen(const char* _Filename, const char* _Mode, FILE* _Stream)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -865,7 +865,7 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_freopen(const char* _Filename, const char* _
 
 
 
-// posix : wfopen
+// posix - wfopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_wfopen(const wchar_t* _Filename, const wchar_t* _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -893,7 +893,7 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_wfopen(const wchar_t* _Filename, const wchar
 #endif
 }
 
-// posix : wfdopen
+// posix - wfdopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_wfdopen(int _Fildes, const wchar_t* _Mode)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -914,7 +914,7 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_wfdopen(int _Fildes, const wchar_t* _Mode)
 #endif
 }
 
-// posix : wfreopen
+// posix - wfreopen
 _XPOSIXAPI_ FILE* __xcall__ x_posix_wfreopen(const wchar_t* _Filename, const wchar_t* _Mode, FILE* _Stream)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -944,7 +944,7 @@ _XPOSIXAPI_ FILE* __xcall__ x_posix_wfreopen(const wchar_t* _Filename, const wch
 
 
 
-// posix : fileno
+// posix - fileno
 _XPOSIXAPI_ int __xcall__ x_posix_fileno(FILE* _Stream)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -954,13 +954,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_fileno(FILE* _Stream)
 #endif
 }
 
-// posix : fseek
+// posix - fseek
 _XPOSIXAPI_ int __xcall__ x_posix_fseek(FILE* _Stream, long _Offset, int _Whence)
 {
 	return fseek(_Stream, _Offset, _Whence);
 }
 
-// posix : fseek64
+// posix - fseek64
 _XPOSIXAPI_ int64_t __xcall__ x_posix_fseek64(FILE* _Stream, int64_t _Offset, int _Whence)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -972,13 +972,13 @@ _XPOSIXAPI_ int64_t __xcall__ x_posix_fseek64(FILE* _Stream, int64_t _Offset, in
 #endif
 }
 
-// posix : ftell
+// posix - ftell
 _XPOSIXAPI_ long __xcall__ x_posix_ftell(FILE* _Stream)
 {
 	return ftell(_Stream);
 }
 
-// posix : ftell64
+// posix - ftell64
 _XPOSIXAPI_ int64_t __xcall__ x_posix_ftell64(FILE* _Stream)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -990,61 +990,61 @@ _XPOSIXAPI_ int64_t __xcall__ x_posix_ftell64(FILE* _Stream)
 #endif
 }
 
-// posix : rewind
+// posix - rewind
 _XPOSIXAPI_ void __xcall__ x_posix_rewind(FILE* _Stream)
 {
 	rewind(_Stream);
 }
 
-// posix : fgetc
+// posix - fgetc
 _XPOSIXAPI_ int __xcall__ x_posix_fgetc(FILE* _Stream)
 {
 	return fgetc(_Stream);
 }
 
-// posix : fputc
+// posix - fputc
 _XPOSIXAPI_ int __xcall__ x_posix_fputc(int _Character, FILE* _Stream)
 {
 	return fputc(_Character, _Stream);
 }
 
-// posix : fgets
+// posix - fgets
 _XPOSIXAPI_ char* __xcall__ x_posix_fgets(char* _Buffer, int _MaxCount, FILE* _Stream)
 {
 	return fgets(_Buffer, _MaxCount, _Stream);
 }
 
-// posix : fputs
+// posix - fputs
 _XPOSIXAPI_ int __xcall__ x_posix_fputs(const char* _Buffer, FILE* _Stream)
 {
 	return fputs(_Buffer, _Stream);
 }
 
-// posix : fread
+// posix - fread
 _XPOSIXAPI_ size_t __xcall__ x_posix_fread(void* _Memory, size_t _Size, size_t _Item, FILE* _Stream)
 {
 	return fread(_Memory, _Size, _Item, _Stream);
 }
 
-// posix : fwrite
+// posix - fwrite
 _XPOSIXAPI_ size_t __xcall__ x_posix_fwrite(const void* _Memory, size_t _Size, size_t _Item, FILE* _Stream)
 {
 	return fwrite(_Memory, _Size, _Item, _Stream);
 }
 
-// posix : feof
+// posix - feof
 _XPOSIXAPI_ int __xcall__ x_posix_feof(FILE* _Stream)
 {
 	return feof(_Stream);
 }
 
-// posix : ferror
+// posix - ferror
 _XPOSIXAPI_ int __xcall__ x_posix_ferror(FILE* _Stream)
 {
 	return ferror(_Stream);
 }
 
-// posix : fsync
+// posix - fsync
 _XPOSIXAPI_ int __xcall__ x_posix_fsync(int _Fildes)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
@@ -1055,13 +1055,13 @@ _XPOSIXAPI_ int __xcall__ x_posix_fsync(int _Fildes)
 #endif
 }
 
-// posix : fclose
+// posix - fclose
 _XPOSIXAPI_ int __xcall__ x_posix_fclose(FILE* _Stream)
 {
 	return fclose(_Stream);
 }
 
-// posix : fsize
+// posix - fsize
 _XPOSIXAPI_ unsigned long long __xcall__ x_posix_fsize(const char* _Filename)
 {
 	x_file_stat_t 		vStat;
@@ -1074,7 +1074,7 @@ _XPOSIXAPI_ unsigned long long __xcall__ x_posix_fsize(const char* _Filename)
 
 
 
-// posix : opendir
+// posix - opendir
 _XPOSIXAPI_ DIR* __xcall__ x_posix_opendir(const char* _Name)
 {
 	if(_Name == NULL)
@@ -1117,7 +1117,7 @@ _XPOSIXAPI_ DIR* __xcall__ x_posix_opendir(const char* _Name)
 #endif
 }
 
-// posix : readdir
+// posix - readdir
 _XPOSIXAPI_ struct dirent* __xcall__ x_posix_readdir(DIR* _Stream)
 {
 #if defined(XCC_COMPILER_MSVC)
@@ -1203,7 +1203,7 @@ _XPOSIXAPI_ struct dirent* __xcall__ x_posix_readdir(DIR* _Stream)
 #endif
 }
 
-// posix : closedir
+// posix - closedir
 _XPOSIXAPI_ int __xcall__ x_posix_closedir(DIR* _Stream)
 {
 #if defined(XCC_COMPILER_MSVC)

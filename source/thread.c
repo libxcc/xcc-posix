@@ -9,7 +9,7 @@
 
 
 
-// posix : gettid
+// posix - gettid
 _XPOSIXAPI_ pid_t __xcall__ x_posix_gettid(void)
 {
 #if defined(XCC_SYSTEM_WINDOWS)
