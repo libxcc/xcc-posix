@@ -16,6 +16,9 @@ _XPOSIXAPI_ void* __xcall__ x_posix_dlsym(void* _Handle, const char* _ProcName);
 // posix - dlclose
 _XPOSIXAPI_ int __xcall__ x_posix_dlclose(void* _Handle);
 
+// posix - dlerror
+_XPOSIXAPI_ const char* __xcall__ x_posix_dlerror();
+
 
 
 XCC_CXX_EXTERN_END

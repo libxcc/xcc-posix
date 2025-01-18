@@ -187,13 +187,38 @@ _XPOSIXAPI_ void __xcall__ x_log_set_enable_lock(bool _Enable)
 	_global_log_lock = _Enable;
 }
 
-/// Set log print level
+/// 从字符串转换转换日志级别
+_XPOSIXAPI_ x_log_level_t __xcall__ x_log_convert_level(const char* _Level)
+{
+	if(NULL == _Level || 0 == x_posix_strlen(_Level))
+	{
+		return XLOG_LEVEL_FATAL;
+	}
+
+	char		vChar = _Level[0];
+	switch (vChar)
+	{
+		case 'V':
+		case 'v':	return XLOG_LEVEL_VERBOSE;
+		case 'D':
+		case 'd':	return XLOG_LEVEL_DEBUG;
+		case 'I':
+		case 'i':	return XLOG_LEVEL_INFO;
+		case 'W':
+		case 'w':	return XLOG_LEVEL_WARNING;
+		case 'E':
+		case 'e':	return XLOG_LEVEL_ERROR;
+		default:	return XLOG_LEVEL_FATAL;
+	}
+}
+
+/// 设置日志级别
 _XPOSIXAPI_ void __xcall__ x_log_set_level(x_log_level_t _Level)
 {
 	_global_log_level = _Level;
 }
 
-/// Get log print level
+/// 获取日志级别
 _XPOSIXAPI_ x_log_level_t __xcall__ x_log_get_level()
 {
 	return _global_log_level;
@@ -217,7 +242,7 @@ _XPOSIXAPI_ void __xcall__ x_log_set_printf_stream(FILE* _Stream)
 	_global_log_stream = _Stream;
 }
 
-/// Format log output
+/// 以可变参数模式格式化日志输出
 _XPOSIXAPI_ int __xcall__ x_log_printf(x_log_level_t _Level, const char* _TAG, const char* _Format, ...)
 {
 	if(_Level < _global_log_level || _Format == NULL)
@@ -234,7 +259,7 @@ _XPOSIXAPI_ int __xcall__ x_log_printf(x_log_level_t _Level, const char* _TAG, c
 	return vSync;
 }
 
-/// Format log output. The rules are consistent with vprint()
+/// 以参数列表模式格式化日志输出
 _XPOSIXAPI_ int __xcall__ x_log_vprintf(x_log_level_t _Level, const char* _TAG, const char* _Format, va_list _ArgList)
 {
 	if(_Level < _global_log_level || _Format == NULL)

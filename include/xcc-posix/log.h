@@ -7,7 +7,7 @@ XCC_CXX_EXTERN_BEGIN
 
 
 // 日志级别
-typedef enum
+typedef enum x_log_level_t
 {
 	XLOG_LEVEL_VERBOSE		= 0,
 	XLOG_LEVEL_DEBUG		= 1,
@@ -25,6 +25,10 @@ typedef int(__xcall__ *xcc_log_printf_cb_t)(x_log_level_t _Level, const char* _T
 /// 设置启用日志锁
 /// \param _Enable true为启用，false为不启用
 _XPOSIXAPI_ void __xcall__ x_log_set_enable_lock(bool _Enable);
+
+/// 从字符串转换转换日志级别
+/// \param _Level "V" "D" "I" "W" "E" 为转换的字符串，只取第一位
+_XPOSIXAPI_ x_log_level_t __xcall__ x_log_convert_level(const char* _Level);
 
 /// 设置日志级别
 /// \param _Level 需要启用的日志级别
