@@ -20,7 +20,39 @@
 #include <sys/sysctl.h>
 #endif
 #endif
+#if defined(XCC_SYSTEM_IOS)
+#include <spawn.h>
+#include <sys/wait.h>
+#endif
 
+
+
+// platform - ios - system
+static int __xcall__ x_platform_system(const char* _Command)
+{
+#if defined(XCC_SYSTEM_IOS)
+	pid_t pid;
+	char *argv[] = {"/bin/sh", "-c", (char*)_Command, NULL};
+	int status = posix_spawn(&pid, "/bin/sh", NULL, NULL, argv, NULL);
+	if (status == 0)
+	{
+		if (waitpid(pid, &status, 0) != -1)
+		{
+			return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		return -1;
+	}
+#else
+	return system(_Command);
+#endif
+}
 
 
 
@@ -41,7 +73,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_system(const char* _Command)
 	}
 	return vStatus;
 #else
-	return system(_Command);
+	return x_platform_system(_Command);
 #endif
 }
 
@@ -68,7 +100,7 @@ _XPOSIXAPI_ int __xcall__ x_posix_wsystem(const wchar_t* _Command)
 
 	if(vCommandU)
 	{
-		vStatus = system(vCommandU);
+		vStatus = x_platform_system(vCommandU);
 	}
 	if(vCommandU)
 	{
@@ -89,7 +121,7 @@ _XPOSIXAPI_ long __xcall__ x_posix_gethostid(void)
 	IP_ADAPTER_ADDRESSES* 	vAddresses = (IP_ADAPTER_ADDRESSES*)x_posix_malloc(vLength);
 	if(vAddresses)
 	{
-		// Make an initial call to GetAdaptersAddresses to get the required memory size
+		// 首次调用 GetAdaptersAddresses 以获取所需的内存大小
 		if(GetAdaptersAddresses(AF_UNSPEC, 0, NULL, vAddresses, &vLength) == ERROR_BUFFER_OVERFLOW)
 		{
 			x_posix_free(vAddresses);
@@ -98,10 +130,10 @@ _XPOSIXAPI_ long __xcall__ x_posix_gethostid(void)
 			{
 				if(GetAdaptersAddresses(AF_UNSPEC, 0, NULL, vAddresses, &vLength) == ERROR_SUCCESS)
 				{
-					// If successful, take out the first network card from the received data and convert it to HostID
-					for(IP_ADAPTER_ADDRESSES* vIterator = vAddresses; vIterator && vHostID == 0ULL; vIterator = vIterator->Next)
+					// 如果成功，从接收的数据中取出第一个网卡，并将其转换为HostID
+					for(const IP_ADAPTER_ADDRESSES* vIterator = vAddresses; vIterator && vHostID == 0ULL; vIterator = vIterator->Next)
 					{
-						// Ensure that the length of the MAC address is 00-00-00-00-00-00
+						// 确保 MAC 地址的长度为 00-00-00-00-00-00
 						if(vIterator->PhysicalAddressLength == 6)
 						{
 							for(unsigned int vIndex = 0; vIndex < 6; ++vIndex)

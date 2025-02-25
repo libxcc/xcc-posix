@@ -14,7 +14,10 @@
 #include <xcc-posix/filesystem.h>
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
+#if defined(XCC_SYSTEM_IOS)
+#else
 #include <libproc.h>
+#endif
 #endif
 
 
@@ -535,9 +538,15 @@ _XPOSIXAPI_ int __xcall__ x_proc_get_data_by_id(x_pid_type _ProcessID, x_proc_da
 	return x_posix_errno();
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
+#if defined(XCC_SYSTEM_IOS)
+	XCC_UNUSED(_ProcessID);
+	XCC_UNUSED(_ProcessData);
+	return EINVAL;
+#else
 	int		vStatusName = proc_name((x_proc_id_t)_ProcessID, _ProcessData->name, X_PROC_MAX_NAME);
 	int		vStatusPath = proc_pidpath((x_proc_id_t)_ProcessID, _ProcessData->path, X_PROC_MAX_PATH);
 	return vStatusName == 0 &&  vStatusPath == 0;
+#endif
 #endif
 }
 
@@ -598,6 +607,10 @@ _XPOSIXAPI_ x_proc_find_t __xcall__ x_proc_find_first(x_proc_data_t* _ProcessDat
 	return vHandle;
 #endif
 #if defined(XCC_SYSTEM_DARWIN)
+#if defined(XCC_SYSTEM_IOS)
+	XCC_UNUSED(_ProcessData);
+	return NULL;
+#else
 	bool		vProcessFind = false;
 	int		vProcessCount = proc_listpids(PROC_ALL_PIDS, 0, NULL, 0) * 2;
 	if(vProcessCount <= 0)
@@ -647,6 +660,7 @@ _XPOSIXAPI_ x_proc_find_t __xcall__ x_proc_find_first(x_proc_data_t* _ProcessDat
 	}
 
 	return (x_proc_find_t)vHandle;
+#endif
 #endif
 }
 

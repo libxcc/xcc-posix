@@ -19,7 +19,13 @@
 
 // X-Series Platform Definition : Darwin
 #if defined (__APPLE__)
+#include <TargetConditionals.h>
 #define			XCC_SYSTEM_DARWIN					(1)
+#endif
+
+// X-Series Platform Definition : iOS
+#if defined (TARGET_OS_IPHONE)
+#define			XCC_SYSTEM_IOS						(1)
 #endif
 
 // X-Series Platform Definition : Android
